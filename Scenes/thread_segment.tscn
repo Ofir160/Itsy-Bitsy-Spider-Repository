@@ -3,7 +3,6 @@
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_cwyq1"]
 
 [node name="ThreadSegment" type="RigidBody2D"]
-collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("SegmentShape2D_cwyq1")

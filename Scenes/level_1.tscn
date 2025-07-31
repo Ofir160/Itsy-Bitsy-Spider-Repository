@@ -28,13 +28,13 @@ rotation = 2.0944
 points = PackedVector2Array(0, -250, 0, 250)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(280, -64)
+position = Vector2(118, -68)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("CircleShape2D_8ffim")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
-position = Vector2(133, -61)
+position = Vector2(-1, -83)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 shape = SubResource("CircleShape2D_xfk5q")
