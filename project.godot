@@ -17,4 +17,4 @@ config/icon="res://icon.svg"
 
 [physics]
 
-2d/default_gravity=981.0
+2d/default_gravity=0.0

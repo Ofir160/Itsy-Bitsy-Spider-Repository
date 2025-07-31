@@ -12,42 +12,55 @@ script = ExtResource("1_kjoau")
 physics_bodies = [NodePath("NodeA"), NodePath("ThreadSegment"), NodePath("ThreadSegment2"), NodePath("ThreadSegment3"), NodePath("ThreadSegment4"), NodePath("ThreadSegment5"), NodePath("ThreadSegment6"), NodePath("ThreadSegment7"), NodePath("ThreadSegment8"), NodePath("ThreadSegment9"), NodePath("NodeB")]
 
 [node name="NodeA" type="StaticBody2D" parent="."]
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NodeA"]
 shape = SubResource("CircleShape2D_jmrop")
 
 [node name="NodeB" type="StaticBody2D" parent="."]
 position = Vector2(0, 100)
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NodeB"]
 shape = SubResource("CircleShape2D_jmrop")
 
 [node name="ThreadSegment" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 10)
+collision_mask = 2
 
 [node name="ThreadSegment2" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 20)
+collision_mask = 2
 
 [node name="ThreadSegment3" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 30)
+collision_mask = 2
 
 [node name="ThreadSegment4" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 40)
+collision_mask = 2
 
 [node name="ThreadSegment5" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 50)
+collision_mask = 2
 
 [node name="ThreadSegment6" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 60)
+collision_mask = 2
 
 [node name="ThreadSegment7" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 70)
+collision_mask = 2
 
 [node name="ThreadSegment8" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 80)
+collision_mask = 2
 
 [node name="ThreadSegment9" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 90)
+collision_mask = 2
 
 [node name="PinJoint2D" type="PinJoint2D" parent="."]
 position = Vector2(0, 5)
