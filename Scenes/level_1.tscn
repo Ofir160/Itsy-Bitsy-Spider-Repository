@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2smjd2mabxsc"]
+
+[ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/frame_thread.tscn" id="1_vk57k"]
+[ext_resource type="PackedScene" uid="uid://dcj0iui4jilgj" path="res://Scenes/thread.tscn" id="2_8ffim"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8ffim"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xfk5q"]
+
+[node name="Level 1" type="Node2D"]
+
+[node name="Camera" type="Camera2D" parent="."]
+
+[node name="Threads" type="Node" parent="."]
+
+[node name="FrameThreads" type="Node" parent="Threads"]
+
+[node name="Line 1" parent="Threads" instance=ExtResource("1_vk57k")]
+position = Vector2(0, -8)
+points = PackedVector2Array(0, -250, 0, 250)
+
+[node name="Line 2" parent="Threads" instance=ExtResource("1_vk57k")]
+rotation = -2.0944
+points = PackedVector2Array(0, -250, 0, 250)
+
+[node name="Line 3" parent="Threads" instance=ExtResource("1_vk57k")]
+rotation = 2.0944
+points = PackedVector2Array(0, -250, 0, 250)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(118, -68)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_8ffim")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+position = Vector2(-1, -83)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+shape = SubResource("CircleShape2D_xfk5q")
+
+[node name="thread" parent="." node_paths=PackedStringArray("NodeA", "NodeB") instance=ExtResource("2_8ffim")]
+NodeA = NodePath("../StaticBody2D")
+NodeB = NodePath("../StaticBody2D2")

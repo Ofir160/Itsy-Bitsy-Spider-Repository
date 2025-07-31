@@ -1,0 +1,112 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcj0iui4jilgj"]
+
+[ext_resource type="Script" uid="uid://ecqo8o74xdty" path="res://Scripts/thread.gd" id="1_kjoau"]
+[ext_resource type="PackedScene" uid="uid://c6id13qu7pjt5" path="res://Scenes/thread_segment.tscn" id="2_jmrop"]
+
+[node name="thread" type="Line2D" node_paths=PackedStringArray("physics_bodies")]
+points = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+width = 2.5
+script = ExtResource("1_kjoau")
+physics_bodies = [NodePath("ThreadSegment"), NodePath("ThreadSegment2"), NodePath("ThreadSegment3"), NodePath("ThreadSegment4"), NodePath("ThreadSegment5"), NodePath("ThreadSegment6"), NodePath("ThreadSegment7"), NodePath("ThreadSegment8"), NodePath("ThreadSegment9"), NodePath("ThreadSegment10")]
+
+[node name="ThreadSegment" parent="." instance=ExtResource("2_jmrop")]
+collision_mask = 0
+
+[node name="ThreadSegment2" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 10)
+collision_mask = 0
+
+[node name="ThreadSegment3" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 20)
+collision_mask = 0
+
+[node name="ThreadSegment4" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 30)
+collision_mask = 0
+
+[node name="ThreadSegment5" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 40)
+collision_mask = 0
+
+[node name="ThreadSegment6" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 50)
+collision_mask = 0
+
+[node name="ThreadSegment7" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 60)
+collision_mask = 0
+
+[node name="ThreadSegment8" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 70)
+collision_mask = 0
+
+[node name="ThreadSegment9" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 80)
+collision_mask = 0
+
+[node name="ThreadSegment10" parent="." instance=ExtResource("2_jmrop")]
+position = Vector2(0, 90)
+collision_mask = 0
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+node_b = NodePath("../ThreadSegment")
+softness = 1.0
+
+[node name="PinJoint2D2" type="PinJoint2D" parent="."]
+position = Vector2(0, 10)
+node_a = NodePath("../ThreadSegment")
+node_b = NodePath("../ThreadSegment2")
+softness = 1.0
+
+[node name="PinJoint2D3" type="PinJoint2D" parent="."]
+position = Vector2(0, 20)
+node_a = NodePath("../ThreadSegment2")
+node_b = NodePath("../ThreadSegment3")
+softness = 1.0
+
+[node name="PinJoint2D4" type="PinJoint2D" parent="."]
+position = Vector2(0, 30)
+node_a = NodePath("../ThreadSegment3")
+node_b = NodePath("../ThreadSegment4")
+softness = 1.0
+
+[node name="PinJoint2D5" type="PinJoint2D" parent="."]
+position = Vector2(0, 40)
+node_a = NodePath("../ThreadSegment4")
+node_b = NodePath("../ThreadSegment5")
+softness = 1.0
+
+[node name="PinJoint2D6" type="PinJoint2D" parent="."]
+position = Vector2(0, 50)
+node_a = NodePath("../ThreadSegment5")
+node_b = NodePath("../ThreadSegment6")
+softness = 1.0
+
+[node name="PinJoint2D7" type="PinJoint2D" parent="."]
+position = Vector2(0, 60)
+node_a = NodePath("../ThreadSegment6")
+node_b = NodePath("../ThreadSegment7")
+softness = 1.0
+
+[node name="PinJoint2D8" type="PinJoint2D" parent="."]
+position = Vector2(0, 70)
+node_a = NodePath("../ThreadSegment7")
+node_b = NodePath("../ThreadSegment8")
+softness = 1.0
+
+[node name="PinJoint2D9" type="PinJoint2D" parent="."]
+position = Vector2(0, 80)
+node_a = NodePath("../ThreadSegment8")
+node_b = NodePath("../ThreadSegment9")
+softness = 1.0
+
+[node name="PinJoint2D10" type="PinJoint2D" parent="."]
+position = Vector2(0, 90)
+node_a = NodePath("../ThreadSegment9")
+node_b = NodePath("../ThreadSegment10")
+softness = 1.0
+
+[node name="PinJoint2D11" type="PinJoint2D" parent="."]
+position = Vector2(0, 100)
+node_a = NodePath("../ThreadSegment10")
+softness = 1.0
