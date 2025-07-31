@@ -24,102 +24,93 @@ shape = SubResource("CircleShape2D_jmrop")
 
 [node name="ThreadSegment" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 10)
-collision_mask = 0
 
 [node name="ThreadSegment2" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 20)
-collision_mask = 0
 
 [node name="ThreadSegment3" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 30)
-collision_mask = 0
 
 [node name="ThreadSegment4" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 40)
-collision_mask = 0
 
 [node name="ThreadSegment5" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 50)
-collision_mask = 0
 
 [node name="ThreadSegment6" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 60)
-collision_mask = 0
 
 [node name="ThreadSegment7" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 70)
-collision_mask = 0
 
 [node name="ThreadSegment8" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 80)
-collision_mask = 0
 
 [node name="ThreadSegment9" parent="." instance=ExtResource("2_jmrop")]
 position = Vector2(0, 90)
-collision_mask = 0
 
 [node name="PinJoint2D" type="PinJoint2D" parent="."]
 position = Vector2(0, 5)
 node_a = NodePath("../NodeA")
 node_b = NodePath("../ThreadSegment")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D2" type="PinJoint2D" parent="."]
 position = Vector2(0, 15)
 node_a = NodePath("../ThreadSegment")
 node_b = NodePath("../ThreadSegment2")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D3" type="PinJoint2D" parent="."]
 position = Vector2(0, 25)
 node_a = NodePath("../ThreadSegment2")
 node_b = NodePath("../ThreadSegment3")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D4" type="PinJoint2D" parent="."]
 position = Vector2(0, 35)
 node_a = NodePath("../ThreadSegment3")
 node_b = NodePath("../ThreadSegment4")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D5" type="PinJoint2D" parent="."]
 position = Vector2(0, 45)
 node_a = NodePath("../ThreadSegment4")
 node_b = NodePath("../ThreadSegment5")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D6" type="PinJoint2D" parent="."]
 position = Vector2(0, 55)
 node_a = NodePath("../ThreadSegment5")
 node_b = NodePath("../ThreadSegment6")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D7" type="PinJoint2D" parent="."]
 position = Vector2(0, 65)
 node_a = NodePath("../ThreadSegment6")
 node_b = NodePath("../ThreadSegment7")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D8" type="PinJoint2D" parent="."]
 position = Vector2(0, 75)
 node_a = NodePath("../ThreadSegment7")
 node_b = NodePath("../ThreadSegment8")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D9" type="PinJoint2D" parent="."]
 position = Vector2(0, 85)
 node_a = NodePath("../ThreadSegment8")
 node_b = NodePath("../ThreadSegment9")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D10" type="PinJoint2D" parent="."]
 position = Vector2(0, 95)
 node_a = NodePath("../ThreadSegment9")
 node_b = NodePath("../NodeB")
-softness = 10.0
+softness = 0.1
 
 [node name="PinJoint2D11" type="PinJoint2D" parent="."]
 position = Vector2(0, 100)
 node_a = NodePath("../ThreadSegment9")
 node_b = NodePath("../NodeB")
-softness = 10.0
+softness = 0.1

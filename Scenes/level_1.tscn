@@ -9,18 +9,65 @@
 
 [node name="Threads" type="Node" parent="."]
 
+[node name="SpiralThreads" type="Node" parent="Threads"]
+
+[node name="Thread" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+position = Vector2(2, 0)
+PointA = NodePath("../../../Point 1")
+PointB = NodePath("../../../Point 2")
+
+[node name="Thread2" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+position = Vector2(2, 0)
+PointA = NodePath("../../../Point 2")
+PointB = NodePath("../../../Point 3")
+
+[node name="Thread3" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+position = Vector2(2, 0)
+PointA = NodePath("../../../Point 3")
+PointB = NodePath("../../../Point 4")
+
+[node name="Thread4" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+PointA = NodePath("../../../Point 4")
+PointB = NodePath("../../../Point 5")
+
+[node name="Thread5" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+position = Vector2(2, 0)
+PointA = NodePath("../../../Point 5")
+PointB = NodePath("../../../Point 6")
+
+[node name="Thread6" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+position = Vector2(2, 0)
+PointA = NodePath("../../../Point 6")
+PointB = NodePath("../../../Point 1")
+
 [node name="FrameThreads" type="Node" parent="Threads"]
 
-[node name="Line 1" parent="Threads" instance=ExtResource("1_vk57k")]
+[node name="Line 1" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 position = Vector2(0, -8)
 points = PackedVector2Array(0, -250, 0, 250)
 
-[node name="Line 2" parent="Threads" instance=ExtResource("1_vk57k")]
+[node name="Line 2" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = -2.0944
 points = PackedVector2Array(0, -250, 0, 250)
 
-[node name="Line 3" parent="Threads" instance=ExtResource("1_vk57k")]
+[node name="Line 3" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = 2.0944
 points = PackedVector2Array(0, -250, 0, 250)
 
-[node name="thread" parent="." instance=ExtResource("2_8ffim")]
+[node name="Point 1" type="Node2D" parent="."]
+position = Vector2(0, -100)
+
+[node name="Point 2" type="Node2D" parent="."]
+position = Vector2(86, -50)
+
+[node name="Point 3" type="Node2D" parent="."]
+position = Vector2(86, 50)
+
+[node name="Point 4" type="Node2D" parent="."]
+position = Vector2(0, 100)
+
+[node name="Point 5" type="Node2D" parent="."]
+position = Vector2(-86, 50)
+
+[node name="Point 6" type="Node2D" parent="."]
+position = Vector2(-86, -50)
