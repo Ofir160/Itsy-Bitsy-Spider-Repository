@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://d2smjd2mabxsc"]
+[gd_scene load_steps=7 format=3 uid="uid://d2smjd2mabxsc"]
 
 [ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/frame_thread.tscn" id="1_vk57k"]
 [ext_resource type="PackedScene" uid="uid://dcj0iui4jilgj" path="res://Scenes/spiral_thread.tscn" id="2_8ffim"]
@@ -6,49 +6,64 @@
 [ext_resource type="Texture2D" uid="uid://cna2dwayaxq5d" path="res://Assets/Bg1.png" id="4_7p6j4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xfk5q"]
-radius = 239.68
+radius = 442.45
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7p6j4"]
+radius = 3.0
 
 [node name="Level 1" type="Node2D"]
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Gravitational Attractor" type="Area2D" parent="."]
+visible = false
 position = Vector2(-1, -6)
 gravity_space_override = 3
 gravity_point = true
 gravity_point_center = Vector2(0, 0)
 gravity_direction = Vector2(0, 0)
-gravity = 500.0
+gravity = 100.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gravitational Attractor"]
 shape = SubResource("CircleShape2D_xfk5q")
 
+[node name="Origin Snap Zone" type="Area2D" parent="."]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Origin Snap Zone"]
+shape = SubResource("CircleShape2D_7p6j4")
+
 [node name="Camera" type="Camera2D" parent="."]
-zoom = Vector2(1.23, 1.23)
 
 [node name="Threads" type="Node" parent="."]
 
 [node name="SpiralThreads" type="Node" parent="Threads"]
 
 [node name="Thread 1" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+visible = false
 PointA = NodePath("../../../Intsersection 1")
 PointB = NodePath("../../../Intsersection 2")
 
 [node name="Thread 2" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+visible = false
 PointA = NodePath("../../../Intsersection 2")
 PointB = NodePath("../../../Intsersection 3")
 
 [node name="Thread 3" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+visible = false
 PointA = NodePath("../../../Intsersection 3")
 PointB = NodePath("../../../Intsersection 4")
 
 [node name="Thread 4" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+visible = false
 PointA = NodePath("../../../Intsersection 4")
 PointB = NodePath("../../../Intsersection 5")
 
 [node name="Thread 5" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+visible = false
 PointA = NodePath("../../../Intsersection 5")
 PointB = NodePath("../../../Intsersection 6")
 
 [node name="Thread 6" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
+visible = false
 PointA = NodePath("../../../Intsersection 6")
 PointB = NodePath("../../../Intsersection 1")
 
@@ -56,28 +71,27 @@ PointB = NodePath("../../../Intsersection 1")
 
 [node name="Line 1" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = 4.71239
-points = PackedVector2Array(0, 0, 250, 0)
+points = PackedVector2Array(0, 0, 400, 0)
 
 [node name="Line 2" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = 5.75959
-points = PackedVector2Array(0, 0, 250, 0)
+points = PackedVector2Array(0, 0, 400, 0)
 
 [node name="Line 3" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = 0.523599
-points = PackedVector2Array(0, 0, 250, 0)
+points = PackedVector2Array(0, 0, 400, 0)
 
 [node name="Line 4" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = 1.5708
-points = PackedVector2Array(0, 0, 250, 0)
+points = PackedVector2Array(0, 0, 400, 0)
 
 [node name="Line 5" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
 rotation = 2.61799
-points = PackedVector2Array(0, 0, 250, 0)
+points = PackedVector2Array(0, 0, 400, 0)
 
 [node name="Line 6" parent="Threads/FrameThreads" instance=ExtResource("1_vk57k")]
-position = Vector2(-2, 1)
 rotation = 3.66519
-points = PackedVector2Array(0, 0, 250, 0)
+points = PackedVector2Array(0, 0, 400, 0)
 
 [node name="Intsersection 1" type="Node2D" parent="."]
 position = Vector2(0, -100)
@@ -108,3 +122,6 @@ initial_frame = NodePath("../Threads/FrameThreads/Line 1")
 z_index = -1
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("4_7p6j4")
+
+[connection signal="body_entered" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_entered"]
+[connection signal="body_exited" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_exited"]

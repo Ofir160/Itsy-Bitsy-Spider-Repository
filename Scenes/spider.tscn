@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dk4f7m2vymjcx" path="res://Assets/Spiderrrrr.png" id="2_gedd4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gedd4"]
-radius = 18.0
+radius = 0.1
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v0iea"]
 animations = [{
@@ -18,6 +18,7 @@ animations = [{
 }]
 
 [node name="spider" type="CharacterBody2D"]
+collision_mask = 2
 script = ExtResource("1_h33fn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -32,6 +33,7 @@ animation = &"Idle"
 flip_v = true
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
