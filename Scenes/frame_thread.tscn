@@ -4,5 +4,5 @@
 
 [node name="frame" type="Line2D"]
 points = PackedVector2Array(0, 0, 0, 0)
-width = 5.0
+width = 2.5
 script = ExtResource("1_jxgr6")

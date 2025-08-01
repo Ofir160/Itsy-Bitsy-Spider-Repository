@@ -7,7 +7,7 @@
 
 [node name="thread" type="Line2D" node_paths=PackedStringArray("physics_bodies")]
 points = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-width = 2.5
+width = 1.0
 script = ExtResource("1_7ikvq")
 physics_bodies = [NodePath("NodeA"), NodePath("ThreadSegment"), NodePath("ThreadSegment2"), NodePath("ThreadSegment3"), NodePath("ThreadSegment4"), NodePath("ThreadSegment5"), NodePath("ThreadSegment6"), NodePath("ThreadSegment7"), NodePath("ThreadSegment8"), NodePath("ThreadSegment9"), NodePath("NodeB")]
 

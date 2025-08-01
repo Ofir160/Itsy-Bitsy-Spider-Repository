@@ -1,9 +1,10 @@
 [gd_scene load_steps=5 format=3 uid="uid://dn2b5bcbl5j78"]
 
 [ext_resource type="Script" uid="uid://bn0nv11c3qe4j" path="res://Scripts/spider.gd" id="1_h33fn"]
-[ext_resource type="Texture2D" uid="uid://j7ntx67y2xl3" path="res://Assets/Spiderrr.png" id="2_gedd4"]
+[ext_resource type="Texture2D" uid="uid://dk4f7m2vymjcx" path="res://Assets/Spiderrrrr.png" id="2_gedd4"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_f60y1"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_gedd4"]
+radius = 18.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v0iea"]
 animations = [{
@@ -20,9 +21,17 @@ animations = [{
 script = ExtResource("1_h33fn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_f60y1")
+position = Vector2(-3, 0)
+shape = SubResource("CircleShape2D_gedd4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.1, 0.1)
+rotation = 1.5708
+scale = Vector2(0.05, 0.05)
 sprite_frames = SubResource("SpriteFrames_v0iea")
 animation = &"Idle"
+flip_v = true
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
