@@ -39,6 +39,8 @@ shape = SubResource("CircleShape2D_7p6j4")
 
 [node name="Thread 1" parent="Threads/SpiralThreads" node_paths=PackedStringArray("PointA", "PointB") instance=ExtResource("2_8ffim")]
 visible = false
+position = Vector2(-1, -98)
+rotation = -1.0472
 PointA = NodePath("../../../Intsersection 1")
 PointB = NodePath("../../../Intsersection 2")
 

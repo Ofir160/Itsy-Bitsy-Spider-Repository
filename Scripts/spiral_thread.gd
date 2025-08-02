@@ -15,7 +15,7 @@ func _ready() -> void:
 	if PointA.position.y > PointB.position.y:
 		angle = PI - atan(offset.x / offset.y)
 	else:
-		angle = -atan(offset.x / offset.y)
+		angle = -atan(offset.x / offset.y) 
 	rotation = angle
 	
 func _physics_process(delta: float) -> void:
