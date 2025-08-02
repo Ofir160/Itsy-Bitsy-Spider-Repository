@@ -31,7 +31,6 @@ var spooling : bool
 var create_spool : bool
 var spool_start_frame : FrameThread
 var spool_created_complete : bool
-var spool_endpoint : Vector2
 
 var connection_found : bool
 var chosen_connection : Vector2
@@ -57,7 +56,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_released("Spool"):
 			if current_frame:
 				# Finish the thread	
-				spool_endpoint = position
+				
 				end_spool()
 				pass
 			else:
@@ -78,20 +77,20 @@ func move(delta : float) -> void:
 	 
 func spool() -> void:
 	if len(current_frame.incomplete_connections) == 0:# If there are no incomplete connections
-		if (position - origin_connection).length() > SPOOL_BORDER:# Cant create too close to the origin
-			#this works
-			if within_borders():# Cant create too close to other threads
-				
-				for connection in current_frame.complete_connections:
-					if (position - connection).length() > CONNECTION_ERROR:
-						
-						spool_created_complete = false
-						create_new_spool()
-						break
+		print("there are no incomplete connections")
+		if (position - origin_connection).length() > SPOOL_BORDER and within_borders():# Cant create too close to the origin
+			print("within borders")# Cant create too close to other threads
+			for connection in current_frame.complete_connections:
+				if (position - connection).length() > CONNECTION_ERROR:
+					print("Not too close to complete connection")
+					spool_created_complete = false
+					create_new_spool()
+					break
 					
 			
 	else:
 		# create spool from incomplete connection
+		print("Incomplete connection, snapping")
 		var results = loop_connections()
 		chosen_connection = results[0]
 		connection_found = results[1]
@@ -102,10 +101,9 @@ func spool() -> void:
 			starting_position = position
 			desired_position = chosen_connection
 			timer.wait_time = SPOOL_ON_CONNECTION
-			timer.start()
 			spool_created_complete = true
 			create_spool = true
-	
+			timer.start()
 func turn() -> void:
 	if current_frame:
 		var results = loop_connections()
@@ -193,6 +191,7 @@ func _on_timer_timeout() -> void:
 		rotation += 2.0 * PI
 	if create_spool:
 		create_new_spool()
+		spooling = true
 
 func _on_origin_snap_zone_body_exited(_body: Node2D) -> void:
 	var frame_index = frames.find(current_frame)
@@ -227,13 +226,11 @@ func create_new_spool() -> void:
 func end_spool()-> void:
 	var starting_index = frames.find(spool_start_frame)
 	var end_index = frames.find(current_frame)
-
-	
 	
 	if spool_thread:
 		if absi(end_index - starting_index) == 1:# Cant end if you arent on an adjacent frame
-			if len(current_frame.incomplete_connections) < 1: # If no incomplete
-				if (position - origin_connection).length() > SPOOL_BORDER and within_borders():# Cant create too close to the origin
+			if (position - origin_connection).length() > SPOOL_BORDER and within_borders():# Cant create too close to the origin
+				if len(current_frame.incomplete_connections) < 1: # If no incomplete
 					if left_right_overlap_check(starting_index, end_index):
 						for connection in current_frame.complete_connections: #too close to completed
 							if (position - connection).length() > CONNECTION_ERROR:
@@ -257,27 +254,51 @@ func end_spool()-> void:
 									spool_start_frame.incomplete_connections.erase(spool_start)
 								else:
 									spool_start_frame.incomplete_connections.append(spool_start)
-								
-								
 							else:
-								spool_thread.queue_free() # we are too close to another thread
-								spooling = false
-								print("too close to other thread")
+								print("too close to complete connection")
 					else:
-						spool_thread.queue_free() # we are overlaping
+						print("Overlap") # SNAPPPP
+						spool_thread.queue_free()
 						spooling = false
-						print("overlap")
-							
-							
+						
+				else:
+					print("There is an incomplete connection on ending_frame")
+					var results = loop_connections()
+					position = results[0]
+					var nodeA : Node2D = Node2D.new()
+					nodeA.position = spool_start
+					get_tree().current_scene.add_child(nodeA)
+					var nodeB : Node2D = Node2D.new()
+					nodeB.position = position
+					get_tree().current_scene.add_child(nodeB)
+					# make thread
+					var thread_instance = thread_scene.instantiate()
+					thread_instance.PointA = nodeA
+					thread_instance.PointB = nodeB
+					get_tree().current_scene.add_child(thread_instance)
+					spool_thread.queue_free()
+					spooling = false
+					# dict update
+					current_frame.incomplete_connections.append(position)
+					if spool_created_complete:
+						spool_start_frame.complete_connections.append(spool_start)
+						spool_start_frame.incomplete_connections.erase(spool_start)
+					else:
+						spool_start_frame.incomplete_connections.append(spool_start)
 			else: # if incomplete (HAVE TO SNAP)
-				pass
-	
-	
+				print("Out of bounds")
+				spool_thread.queue_free()
+				spooling = false
+		else:
+			print("not on adject frame")
+			spool_thread.queue_free()
+			spooling = false
+	else:
+		print("thread doesnt exist")
+	# set endpoint of line
 	
 	
 func within_borders():
-	
-	
 	return position.x > (- camera_dimensions[0]/2) and position.x < (camera_dimensions[0]/2) and position.y > (-camera_dimensions[1]/2) and position.y < ( camera_dimensions[1]/2)
 
 func left_right_overlap_check(s_i, e_i):
