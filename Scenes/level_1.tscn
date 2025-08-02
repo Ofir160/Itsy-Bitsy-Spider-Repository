@@ -122,7 +122,7 @@ initial_frame = NodePath("../Threads/FrameThreads/Line 1")
 
 [node name="Bg1" type="Sprite2D" parent="."]
 z_index = -1
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.375, 0.375)
 texture = ExtResource("4_7p6j4")
 
 [connection signal="body_entered" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_entered"]
