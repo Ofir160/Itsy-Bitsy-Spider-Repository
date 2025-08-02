@@ -31,6 +31,7 @@ var spooling : bool
 var create_spool : bool
 var spool_start_frame : FrameThread
 var spool_created_complete : bool
+var spool_endpoint : Vector2
 
 var connection_found : bool
 var chosen_connection : Vector2
@@ -56,7 +57,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_released("Spool"):
 			if current_frame:
 				# Finish the thread	
-				print("Hiii")
+				spool_endpoint = position
 				end_spool()
 				pass
 			else:
@@ -78,11 +79,12 @@ func move(delta : float) -> void:
 func spool() -> void:
 	if len(current_frame.incomplete_connections) == 0:# If there are no incomplete connections
 		if (position - origin_connection).length() > SPOOL_BORDER:# Cant create too close to the origin
+			#this works
 			if within_borders():# Cant create too close to other threads
-				print("within camera borders")
+				
 				for connection in current_frame.complete_connections:
 					if (position - connection).length() > CONNECTION_ERROR:
-						print("far enough from other connections")
+						
 						spool_created_complete = false
 						create_new_spool()
 						break
@@ -225,6 +227,8 @@ func create_new_spool() -> void:
 func end_spool()-> void:
 	var starting_index = frames.find(spool_start_frame)
 	var end_index = frames.find(current_frame)
+
+	
 	
 	if spool_thread:
 		if absi(end_index - starting_index) == 1:# Cant end if you arent on an adjacent frame
@@ -256,19 +260,23 @@ func end_spool()-> void:
 								
 								
 							else:
-								pass
+								spool_thread.queue_free() # we are too close to another thread
+								spooling = false
+								print("too close to other thread")
 					else:
-						pass # SNAPPPP
+						spool_thread.queue_free() # we are overlaping
+						spooling = false
+						print("overlap")
 							
 							
 			else: # if incomplete (HAVE TO SNAP)
 				pass
 	
-	# set endpoint of line
+	
 	
 	
 func within_borders():
-	print(position.y,"should be smaller than than than", camera_dimensions[0]/2)
+	
 	
 	return position.x > (- camera_dimensions[0]/2) and position.x < (camera_dimensions[0]/2) and position.y > (-camera_dimensions[1]/2) and position.y < ( camera_dimensions[1]/2)
 
@@ -276,18 +284,24 @@ func left_right_overlap_check(s_i, e_i):
 	var _starting_index = s_i
 	var _end_index = e_i
 	if _end_index > _starting_index or (_starting_index == len(frames)-1 and _end_index == 0): 
-		for thread in spool_start_frame.threads_right.values():
-			var pointa_closer : bool = (thread.PointA.position - origin_connection).length() > (spool_start - origin_connection).length()
-			var pointb_closer : bool = (thread.PointB.position - origin_connection).length() > (position - origin_connection).length()
-			if pointa_closer and pointb_closer:
-				return true
-			else:
-				return false
+		if len(spool_start_frame.threads_right.values()) > 0:
+			for thread in spool_start_frame.threads_right.values():
+				var pointa_closer : bool = (thread.PointA.position - origin_connection).length() > (spool_start - origin_connection).length()
+				var pointb_closer : bool = (thread.PointB.position - origin_connection).length() > (position - origin_connection).length()
+				if pointa_closer and pointb_closer:
+					return true
+				else:
+					return false
+		else:
+			return true
 	else:
-		for thread in spool_start_frame.threads_left.values():
-			var pointa_closer : bool = (thread.PointA.position - origin_connection).length() > (spool_start - origin_connection).length()
-			var pointb_closer : bool = (thread.PointB.position - origin_connection).length() > (position - origin_connection).length()
-			if pointa_closer and pointb_closer:
-				return true
-			else:
-				return false
+		if len(spool_start_frame.threads_left.values()) > 0:
+			for thread in spool_start_frame.threads_left.values():
+				var pointa_closer : bool = (thread.PointA.position - origin_connection).length() > (spool_start - origin_connection).length()
+				var pointb_closer : bool = (thread.PointB.position - origin_connection).length() > (position - origin_connection).length()
+				if pointa_closer and pointb_closer:
+					return true
+				else:
+					return false
+		else:
+			return true
