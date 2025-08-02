@@ -212,19 +212,21 @@ func turn() -> void:
 		chosen_connection = results[0]
 		connection_found = results[1]
 		if not connection_found: # If not near origin and turning
-			timer.wait_time = FULL_TURN_TIME
-			timer.start()
-			lerping = true
 			if Input.get_axis("TurnLeft", "TurnRight") > 0:
+				# If turning right
 				desired_rotation = PI + rotation
 				starting_rotation = rotation
 				desired_position = position
 				starting_position = position
 			else:
+				# If turning left
 				desired_rotation = rotation - PI
 				starting_rotation = rotation
 				desired_position = position
 				starting_position = position
+			timer.wait_time = FULL_TURN_TIME
+			timer.start()
+			lerping = true
 		elif chosen_connection == origin_connection: # if near origin and turning 
 			if Input.get_axis("TurnLeft", "TurnRight") > 0:	
 				var frame_index = frames.find(current_frame)
@@ -285,39 +287,72 @@ func turn() -> void:
 						if approaching_frame_index < 0:
 							approaching_frame_index = len(frames) - 1
 						moving_right = false
-					for thread_position in frame_dict.keys():
-						if (thread_position - position).length() < CONNECTION_ERROR:
-							var thread = frame_dict[thread_position]
-							var pointA : Vector2
-							var pointB : Vector2
-							if (thread.PointA.position - position).length() > (thread.PointB.position - position).length():
-								# Closer to point B
-								pointA = thread.PointB.position
-								pointB = thread.PointA.position
-							else:
-								# Closet to point A
-								pointA = thread.PointA.position
-								pointB = thread.PointB.position
-							
-							var angle = find_angle_from_two_positions(pointA, pointB)
-							if angle < rotation:
-								rotation -= 2.0 * PI
-							desired_rotation = angle
-							starting_rotation = rotation
-							desired_position = pointA
-							starting_position = position
-							lerping = true
-							turning_on_thread = true
-							approaching_thread = thread
-							approaching_frame = frames[approaching_frame_index]
-							thread_end = pointB
-							timer.wait_time = ORIGIN_TURN_TIME
-							timer.start()
-							break
+					if len(frame_dict.keys()) > 0:
+						# If there is a spiral thread to turn to
+						for thread_position in frame_dict.keys():
+							if (thread_position - position).length() < CONNECTION_ERROR:
+								var thread = frame_dict[thread_position]
+								var pointA : Vector2
+								var pointB : Vector2
+								if (thread.PointA.position - position).length() > (thread.PointB.position - position).length():
+									# Closer to point B
+									pointA = thread.PointB.position
+									pointB = thread.PointA.position
+								else:
+									# Closet to point A
+									pointA = thread.PointA.position
+									pointB = thread.PointB.position
+								
+								var angle = find_angle_from_two_positions(pointA, pointB)
+								if angle < rotation:
+									rotation -= 2.0 * PI
+								desired_rotation = angle
+								starting_rotation = rotation
+								desired_position = pointA
+								starting_position = position
+								lerping = true
+								turning_on_thread = true
+								approaching_thread = thread
+								approaching_frame = frames[approaching_frame_index]
+								thread_end = pointB
+								timer.wait_time = ORIGIN_TURN_TIME
+								timer.start()
+								break
+					else:
+						print("No Keys")
+						desired_rotation = PI + rotation
+						starting_rotation = rotation
+						desired_position = position
+						starting_position = position
+						timer.wait_time = FULL_TURN_TIME
+						timer.start()
+						lerping = true
 				else:
-					print(moving_right)
 					# Turning on spiral thread
-					pass
+					if moving_right:
+						var angle : float = fmod(PI + current_frame.rotation, 2.0 * PI)
+						if angle < rotation:
+							rotation -= 2.0 * PI
+						desired_rotation = angle
+						starting_rotation = rotation
+						desired_position = position
+						starting_position = position
+						lerping = true
+						timer.wait_time = ORIGIN_TURN_TIME
+						timer.start()
+						current_thread = null
+					else:
+						var angle : float = current_frame.rotation
+						if angle < rotation:
+							rotation -= 2.0 * PI
+						desired_rotation = angle
+						starting_rotation = rotation
+						desired_position = position
+						starting_position = position
+						lerping = true
+						timer.wait_time = ORIGIN_TURN_TIME
+						timer.start()
+						current_thread = null
 			else:
 				# If we are turning left
 				if correct_angle_frame(rotation) or correct_angle_frame(fmod(PI + rotation, 2.0 * PI)):
@@ -336,38 +371,71 @@ func turn() -> void:
 						approaching_frame_index = current_frame_index + 1
 						approaching_frame_index %= len(frames)
 						moving_right = true
-					for thread_position in frame_dict.keys():
-						if (thread_position - position).length() < CONNECTION_ERROR:
-							var thread = frame_dict[thread_position]
-							var pointA : Vector2
-							var pointB : Vector2
-							if (thread.PointA.position - position).length() > (thread.PointB.position - position).length():
-								# Closer to point B
-								pointA = thread.PointB.position
-								pointB = thread.PointA.position
-							else:
-								# Closet to point A
-								pointA = thread.PointA.position
-								pointB = thread.PointB.position
-							
-							var angle = find_angle_from_two_positions(pointA, pointB)
-							if angle > rotation:
-								rotation += 2.0 * PI
-							desired_rotation = angle
-							starting_rotation = rotation
-							desired_position = pointA
-							starting_position = position
-							lerping = true
-							turning_on_thread = true
-							approaching_thread = thread
-							approaching_frame = frames[approaching_frame_index]
-							thread_end = pointB
-							timer.wait_time = ORIGIN_TURN_TIME
-							timer.start()
-							break
+					if len(frame_dict.keys()) > 0:
+						for thread_position in frame_dict.keys():
+							if (thread_position - position).length() < CONNECTION_ERROR:
+								var thread = frame_dict[thread_position]
+								var pointA : Vector2
+								var pointB : Vector2
+								if (thread.PointA.position - position).length() > (thread.PointB.position - position).length():
+									# Closer to point B
+									pointA = thread.PointB.position
+									pointB = thread.PointA.position
+								else:
+									# Closet to point A
+									pointA = thread.PointA.position
+									pointB = thread.PointB.position
+								
+								var angle = find_angle_from_two_positions(pointA, pointB)
+								if angle > rotation:
+									rotation += 2.0 * PI
+								desired_rotation = angle
+								starting_rotation = rotation
+								desired_position = pointA
+								starting_position = position
+								lerping = true
+								turning_on_thread = true
+								approaching_thread = thread
+								approaching_frame = frames[approaching_frame_index]
+								thread_end = pointB
+								timer.wait_time = ORIGIN_TURN_TIME
+								timer.start()
+								break
+					else:
+						print("No Keys")
+						desired_rotation = rotation - PI
+						starting_rotation = rotation
+						desired_position = position
+						starting_position = position
+						timer.wait_time = FULL_TURN_TIME
+						timer.start()
+						lerping = true
 				else:
-					print(moving_right)
 					# Turning on spiral thread
+					if moving_right:
+						var angle : float = current_frame.rotation
+						if angle > rotation:
+							rotation += 2.0 * PI
+						desired_rotation = angle
+						starting_rotation = rotation
+						desired_position = position
+						starting_position = position
+						lerping = true
+						timer.wait_time = ORIGIN_TURN_TIME
+						timer.start()
+						current_thread = null
+					else:
+						var angle : float = fmod(PI + current_frame.rotation, 2.0 * PI)
+						if angle > rotation:
+							rotation += 2.0 * PI
+						desired_rotation = angle
+						starting_rotation = rotation
+						desired_position = position
+						starting_position = position
+						lerping = true
+						timer.wait_time = ORIGIN_TURN_TIME
+						timer.start()
+						current_thread = null
 					pass
 
 func change_thread() -> void:
@@ -530,7 +598,6 @@ func end_spool()-> void:
 	else:
 		print("thread doesnt exist")
 	# set endpoint of line
-	
 	
 func within_borders():
 	return position.x > (- camera_dimensions[0]/2) and position.x < (camera_dimensions[0]/2) and position.y > (-camera_dimensions[1]/2) and position.y < ( camera_dimensions[1]/2)
