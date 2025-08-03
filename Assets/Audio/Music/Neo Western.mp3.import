@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://0vjeuhitbdll"
+path="res://.godot/imported/Neo Western.mp3-c479faf6ab2338343c674d447a7d10af.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Music/Neo Western.mp3"
+dest_files=["res://.godot/imported/Neo Western.mp3-c479faf6ab2338343c674d447a7d10af.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://cup085s8iak6s"]
+
+[ext_resource type="Texture2D" uid="uid://bodndpecf7e0k" path="res://Assets/Sprites/Creatures/Alive Bug.png" id="1_4fqcp"]
+[ext_resource type="Texture2D" uid="uid://djapmbvstkvh7" path="res://Assets/Sprites/Creatures/Dead Bug.png" id="2_vaib5"]
+[ext_resource type="Script" uid="uid://c66t1e4y64qvw" path="res://Scripts/insect.gd" id="3_vaib5"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vaib5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_4fqcp")
+}],
+"loop": true,
+"name": &"Alive",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vaib5")
+}],
+"loop": true,
+"name": &"Dead",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vaib5"]
+radius = 14.0
+height = 62.0
+
+[node name="Insect" type="Area2D"]
+z_index = 4
+collision_mask = 2
+script = ExtResource("3_vaib5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_vaib5")
+animation = &"Dead"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_vaib5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

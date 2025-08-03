@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://dif23rsjl6tsv"]
+
+[ext_resource type="Script" uid="uid://dyqsk5e68c3hy" path="res://Scripts/level_complete.gd" id="1_202tw"]
+[ext_resource type="Texture2D" uid="uid://fv3avt7m50e1" path="res://Assets/Sprites/Backgrounds/Level completed BG.png" id="1_u5kwf"]
+[ext_resource type="Texture2D" uid="uid://b5oxgnp8orjeu" path="res://Assets/UI/Buttons/Untitled_Artwork-4 2.png" id="3_xuta2"]
+[ext_resource type="Texture2D" uid="uid://brcxe2yuy73em" path="res://Assets/UI/Buttons/Untitled_Artwork-3 2.png" id="4_q8x36"]
+[ext_resource type="Texture2D" uid="uid://ys016rdht040" path="res://Assets/UI/Buttons/Untitled_Artwork-2 2.png" id="5_5ljw4"]
+[ext_resource type="Texture2D" uid="uid://ccbyqgqrij3o0" path="res://Assets/UI/Buttons/Untitled_Artwork-1 2.png" id="6_5637u"]
+
+[node name="LevelComplete" type="Node2D"]
+script = ExtResource("1_202tw")
+
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("1_u5kwf")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Replay" type="TextureButton" parent="."]
+offset_left = -122.0
+offset_top = 61.0
+offset_right = 506.0
+offset_bottom = 204.0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("3_xuta2")
+texture_hover = ExtResource("4_q8x36")
+
+[node name="Continue" type="TextureButton" parent="."]
+offset_left = -116.0
+offset_top = 133.0
+offset_right = 512.0
+offset_bottom = 276.0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("5_5ljw4")
+texture_hover = ExtResource("6_5637u")
+
+[connection signal="pressed" from="Replay" to="." method="_on_replay_pressed"]
+[connection signal="pressed" from="Continue" to="." method="_on_continue_pressed"]

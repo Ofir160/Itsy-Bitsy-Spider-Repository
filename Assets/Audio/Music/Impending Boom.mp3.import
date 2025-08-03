@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bqgo1cmovlmeg"
+path="res://.godot/imported/Impending Boom.mp3-9109889a52b013e8c08a5cc5f2f0e806.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Music/Impending Boom.mp3"
+dest_files=["res://.godot/imported/Impending Boom.mp3-9109889a52b013e8c08a5cc5f2f0e806.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

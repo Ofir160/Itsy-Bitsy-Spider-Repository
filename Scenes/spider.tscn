@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dn2b5bcbl5j78"]
 
 [ext_resource type="Script" uid="uid://bn0nv11c3qe4j" path="res://Scripts/spider.gd" id="1_h33fn"]
-[ext_resource type="Texture2D" uid="uid://dk4f7m2vymjcx" path="res://Assets/Spiderrrrr.png" id="2_gedd4"]
+[ext_resource type="Texture2D" uid="uid://dk4f7m2vymjcx" path="res://Assets/Sprites/Creatures/Spiderrrrr.png" id="2_gedd4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gedd4"]
 radius = 0.1
@@ -18,6 +18,8 @@ animations = [{
 }]
 
 [node name="spider" type="CharacterBody2D"]
+z_index = 5
+collision_layer = 3
 collision_mask = 2
 script = ExtResource("1_h33fn")
 
@@ -27,7 +29,7 @@ shape = SubResource("CircleShape2D_gedd4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 rotation = 1.5708
-scale = Vector2(0.05, 0.05)
+scale = Vector2(0.08, 0.08)
 sprite_frames = SubResource("SpriteFrames_v0iea")
 animation = &"Idle"
 flip_v = true

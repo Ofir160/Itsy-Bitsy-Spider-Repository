@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdexl6ljljvvy"]
+
+[ext_resource type="Script" uid="uid://cd6k33oabgdfh" path="res://Scripts/countdown.gd" id="1_uxvso"]
+
+[sub_resource type="FontFile" id="FontFile_uxvso"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+
+[node name="Countdown" type="RichTextLabel"]
+offset_left = 426.0
+offset_top = 91.0
+offset_right = 515.0
+offset_bottom = 138.0
+theme_override_fonts/normal_font = SubResource("FontFile_uxvso")
+theme_override_font_sizes/normal_font_size = 32
+text = "3:00"
+script = ExtResource("1_uxvso")
+color = Color(1, 1, 1, 1)
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

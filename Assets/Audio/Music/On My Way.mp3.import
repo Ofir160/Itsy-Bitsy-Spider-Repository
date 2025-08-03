@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bqiupfhhp3mep"
+path="res://.godot/imported/On My Way.mp3-066a6eb96f78c8f5036061defa49d96d.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Music/On My Way.mp3"
+dest_files=["res://.godot/imported/On My Way.mp3-066a6eb96f78c8f5036061defa49d96d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

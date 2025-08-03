@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjrpl51xljqhi"]
+
+[ext_resource type="Script" uid="uid://kf5txjfl6gnc" path="res://Scripts/progress_bar.gd" id="1_gsm4l"]
+
+[node name="ProgressBar" type="ProgressBar"]
+offset_left = -425.0
+offset_top = -353.0
+offset_right = -289.0
+offset_bottom = -326.0
+show_percentage = false
+script = ExtResource("1_gsm4l")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

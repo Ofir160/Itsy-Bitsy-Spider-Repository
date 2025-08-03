@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://qyetern4ydyv"]
+
+[ext_resource type="Script" uid="uid://csk4nwdwuk84r" path="res://Scripts/insect_spawner.gd" id="1_ib0yj"]
+
+[node name="insect_spawner" type="Node"]
+script = ExtResource("1_ib0yj")
+Level_1 = Array[float]([5.0, 30.0])
+Level_2 = Array[float]([30.0, 60.0, 90.0, 120.0])
+Level_3 = Array[float]([60.0, 70.0, 90.0, 100.0, 110.0])
+
+[node name="InsectTimer" type="Timer" parent="."]
+
+[node name="WaspTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="InsectTimer" to="." method="_on_insect_timer_timeout"]
+[connection signal="timeout" from="WaspTimer" to="." method="_on_wasp_timer_timeout"]

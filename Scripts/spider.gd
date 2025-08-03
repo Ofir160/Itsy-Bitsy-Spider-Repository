@@ -1,6 +1,10 @@
 class_name Spider
 extends CharacterBody2D
 
+signal ThreadCreated(thread : SpiralThread)
+signal InsectEaten(insect : Insect)
+signal LoopCreated()
+
 @export var frames : Array[FrameThread]
 @export var initial_frame : FrameThread
 @export var origin_connection : Vector2
@@ -20,6 +24,7 @@ var current_frame : FrameThread
 var current_thread : SpiralThread
 
 var lerping : bool
+var lerping_spool_released : bool
 
 var turning_on_thread : bool
 var move_on_thread : bool
@@ -40,6 +45,7 @@ var spooling : bool
 var create_spool : bool
 var spool_start_frame : FrameThread
 var spool_created_complete : bool
+var silk_left : bool = true
 
 var connection_found : bool
 var chosen_connection : Vector2
@@ -48,7 +54,7 @@ func _ready() -> void:
 	current_frame = initial_frame
 	for frame in frames:
 		frame.complete_connections.append(origin_connection)
-	camera_dimensions = get_viewport().size	
+	camera_dimensions = get_viewport().size
 	
 
 func _physics_process(delta: float) -> void:
@@ -62,7 +68,8 @@ func _physics_process(delta: float) -> void:
 		if spooling:
 			spool_thread.points[1].x = position.x
 			spool_thread.points[1].y = position.y
-		if Input.is_action_just_released("Spool"):
+		if Input.is_action_just_released("Spool") or lerping_spool_released:
+			lerping_spool_released = false
 			if current_frame:
 				# Finish the thread	
 				end_spool()
@@ -72,6 +79,9 @@ func _physics_process(delta: float) -> void:
 					spool_thread.queue_free()
 				spooling = false
 	else:
+		if Input.is_action_just_released("Spool"):
+			lerping_spool_released = true
+		
 		var t = (timer.wait_time - timer.time_left) / timer.wait_time
 		rotation = lerp(starting_rotation, desired_rotation, t * t * (3 - 2 * t))
 		position = lerp(starting_position, desired_position, t * t * (3 - 2 * t))
@@ -180,36 +190,37 @@ func move(delta : float) -> void:
 			position += orientation * SPEED * delta
 	 
 func spool() -> void:
-	if len(current_frame.incomplete_connections) == 0:# If there are no incomplete connections
-		print("there are no incomplete connections")
-		if (position - origin_connection).length() > SPOOL_BORDER and within_borders():# Cant create too close to the origin
-			# Cant create too close to other threads
-			for connection in current_frame.complete_connections:
-				if (position - connection).length() < CONNECTION_ERROR:
-					return
-			print("Spool Created!")
-			spool_created_complete = false
-			create_new_spool()
+	if silk_left:
+		if len(current_frame.incomplete_connections) == 0:# If there are no incomplete connections
+			print("there are no incomplete connections")
+			if (position - origin_connection).length() > SPOOL_BORDER and within_borders():# Cant create too close to the original
+				# Cant create too close to other threads
+				for connection in current_frame.complete_connections:
+					if (position - connection).length() < CONNECTION_ERROR:
+						return
+				print("Spool Created!")
+				spool_created_complete = false
+				create_new_spool()
+			else:
+				print("Outside Borders")
 		else:
-			print("Outside Borders")
-	else:
-		# create spool from incomplete connection
-		print("Incomplete connection, attempting to snap")
-		var results = loop_connections()
-		chosen_connection = results[0]
-		connection_found = results[1]
-		if connection_found:
-			lerping = true
-			starting_rotation = rotation
-			desired_rotation = rotation
-			starting_position = position
-			desired_position = chosen_connection
-			timer.wait_time = SPOOL_ON_CONNECTION
-			spool_created_complete = true
-			create_spool = true
-			timer.start()
-		else:
-			print("Incomplete connection too far away!")
+			# create spool from incomplete connection
+			print("Incomplete connection, attempting to snap")
+			var results = loop_connections()
+			chosen_connection = results[0]
+			connection_found = results[1]
+			if connection_found:
+				lerping = true
+				starting_rotation = rotation
+				desired_rotation = rotation
+				starting_position = position
+				desired_position = chosen_connection
+				timer.wait_time = SPOOL_ON_CONNECTION
+				spool_created_complete = true
+				create_spool = true
+				timer.start()
+			else:
+				print("Incomplete connection too far away!")
 			
 func turn() -> void:
 	var results = loop_connections()
@@ -689,16 +700,18 @@ func end_spool()-> void:
 								thread_instance.PointA = nodeA
 								thread_instance.PointB = nodeB
 								get_tree().current_scene.add_child(thread_instance)
+								ThreadCreated.emit(thread_instance)
+								
 								spool_thread.queue_free()
 								spooling = false
 								# update lists
 								current_frame.incomplete_connections.append(position)
 								if spool_created_complete:
-									print("Created a new complete connection")
+									#print("Created a new complete connection")
 									spool_start_frame.complete_connections.append(spool_start)
 									erase_nearby(spool_start_frame.incomplete_connections, spool_start)
 								else:
-									print("Created a new incomplete connection")
+									#print("Created a new incomplete connection")
 									spool_start_frame.incomplete_connections.append(spool_start)
 								# update dicts
 								if (end_index > starting_index or (starting_index == len(frames)-1 and end_index == 0)) and not (starting_index == 0 and end_index == len(frames) - 1):
@@ -708,8 +721,13 @@ func end_spool()-> void:
 								else:
 									spool_start_frame.threads_left[spool_start] = thread_instance
 									current_frame.threads_right[position] = thread_instance
+								if loop_created(position):
+									LoopCreated.emit()
+								break
 							else:
 								print("too close to complete connection")
+								spool_thread.queue_free()
+								spooling = false
 					else:
 						print("Overlap") # SNAPPPP
 						spool_thread.queue_free()
@@ -732,19 +750,23 @@ func end_spool()-> void:
 							thread_instance.PointA = nodeA
 							thread_instance.PointB = nodeB
 							get_tree().current_scene.add_child(thread_instance)
+							ThreadCreated.emit(thread_instance)
+							
 							spool_thread.queue_free()
 							spooling = false
 							# update lists
 							current_frame.complete_connections.append(position)
 							erase_nearby(current_frame.incomplete_connections, position)
+							
 							if spool_created_complete:
-								print("Created a new complete connection")
+								#print("Created a new complete connection")
 								spool_start_frame.complete_connections.append(spool_start)
 								erase_nearby(spool_start_frame.incomplete_connections, spool_start)
 							else:
-								print("Created a new incomplete connection")
+								#print("Created a new incomplete connection")
 								spool_start_frame.incomplete_connections.append(spool_start)
-							# update dicts
+								
+							# update dicts					
 							if end_index > starting_index or (starting_index == len(frames)-1 and end_index == 0):
 								# Right of start. Left of end
 								spool_start_frame.threads_right[spool_start] = thread_instance
@@ -752,6 +774,9 @@ func end_spool()-> void:
 							else:
 								spool_start_frame.threads_left[spool_start] = thread_instance
 								current_frame.threads_right[position] = thread_instance
+								
+							if loop_created(position):
+								LoopCreated.emit()
 						else:
 							print("Incomplete Connection too far away!")
 							spool_thread.queue_free()
@@ -776,47 +801,57 @@ func end_spool()-> void:
 func within_borders():
 	return position.x > (- camera_dimensions[0]/2) and position.x < (camera_dimensions[0]/2) and position.y > (-camera_dimensions[1]/2) and position.y < ( camera_dimensions[1]/2)
 
-func left_right_overlap_check(s_i, e_i):
+func left_right_overlap_check(s_i, e_i) -> bool:
 	var _starting_index = s_i
 	var _end_index = e_i
-	if _end_index > _starting_index or (_starting_index == len(frames)-1 and _end_index == 0): 
+	var result : bool
+	if (_end_index > _starting_index or (_starting_index == len(frames)-1 and _end_index == 0)) and not (_starting_index == 0 and _end_index == len(frames) - 1): 
 		# Right of start. Left of end
 		if len(spool_start_frame.threads_right.values()) > 0:
 			print("Right of start left of end")
+			print(spool_start_frame.threads_right)
 			for thread in spool_start_frame.threads_right.values():
-				if (thread.PointA.position - position).length() < CONNECTION_ERROR:
-					return false
+				if (thread.PointA.position - spool_start).length() < CONNECTION_ERROR:
+					result = false
+					break
 				if (thread.PointB.position - position).length() < CONNECTION_ERROR:
-					return false
+					result = false
+					break
 				var pointa_closer : bool = (thread.PointA.position - origin_connection).length() > (spool_start - origin_connection).length()
 				var pointb_closer : bool = (thread.PointB.position - origin_connection).length() > (position - origin_connection).length()
 				if pointa_closer and pointb_closer:
-					return true
+					result = true
 				elif not pointa_closer and not pointb_closer:
-					return true
+					result = true
 				else:
-					return false
+					result = false
+					break
 		else:
-			return true
+			result = true
 	else:
 		# Right of end. Left of start
 		if len(spool_start_frame.threads_left.values()) > 0:
 			print("Right of end left of start")
+			print(spool_start_frame.threads_left)
 			for thread in spool_start_frame.threads_left.values():
-				if (thread.PointA.position - position).length() < CONNECTION_ERROR:
-					return false
+				if (thread.PointA.position - spool_start).length() < CONNECTION_ERROR:
+					result = false
+					break
 				if (thread.PointB.position - position).length() < CONNECTION_ERROR:
-					return false
+					result = false
+					break
 				var pointa_closer : bool = (thread.PointA.position - origin_connection).length() > (spool_start - origin_connection).length()
 				var pointb_closer : bool = (thread.PointB.position - origin_connection).length() > (position - origin_connection).length()
 				if pointa_closer and pointb_closer:
-					return true
+					result = true
 				elif not pointa_closer and not pointb_closer:
-					return true
+					result = true
 				else:
-					return false
+					result = false
+					break
 		else:
-			return true
+			result = true
+	return result
 			
 func erase_nearby(connections : Array[Vector2], position : Vector2) -> void:
 	for connection in connections:
@@ -832,3 +867,54 @@ func find_angle_from_two_positions(pointA : Vector2, pointB : Vector2) -> float:
 		angle = -atan(offset.x / offset.y) + PI / 2
 	angle = fmod(angle, 2.0 * PI)
 	return angle
+
+func loop_created(starting_position : Vector2) -> bool:
+	var frame = current_frame
+	var pos : Vector2 = starting_position
+	for i in range(0, len(frames)):
+		if len(frame.threads_right.keys()) > 0:
+			var chosen_key : Vector2
+			var key_found : bool
+			for key in frame.threads_right.keys():
+				if (key - pos).length() < CONNECTION_ERROR:
+					chosen_key = key
+					key_found = true
+			var thread : SpiralThread
+			if key_found:
+				thread = frame.threads_right[chosen_key]
+			else:
+				print("No keys nearby")
+				return false
+			if (pos - thread.PointA.position).length() > (pos - thread.PointB.position).length():
+				# Closer to point B
+				if (pos - thread.PointB.position).length() < CONNECTION_ERROR:
+					pos = thread.PointA.position
+				else:
+					print("Not close enough to point")
+					return false
+			else:
+				if (pos - thread.PointA.position).length() < CONNECTION_ERROR:
+					pos = thread.PointB.position
+				else:
+					print("Not close enough to point")
+					return false
+			var frame_index = frames.find(frame)
+			frame_index += 1
+			frame_index %= len(frames)
+			frame = frames[frame_index]
+		else:
+			print("No Keys")
+			return false
+	if (pos - starting_position).length() < CONNECTION_ERROR:
+		return true
+	else:
+		return false
+
+func _on_insect_spawner_insect_created(insect: Insect) -> void:
+	insect.Eaten.connect(_on_insect_eaten)
+	
+func _on_insect_eaten(insect : Insect) -> void:
+	InsectEaten.emit(insect)
+
+func _on_insect_spawner_wasp_created(wasp: Wasp) -> void:
+	wasp.spider = self

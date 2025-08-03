@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cog36ivp3r4uk"
+path="res://.godot/imported/Carpe Diem.mp3-613cac6d5e05d4f43327569767abe4f7.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Music/Carpe Diem.mp3"
+dest_files=["res://.godot/imported/Carpe Diem.mp3-613cac6d5e05d4f43327569767abe4f7.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

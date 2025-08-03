@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://c2qvhe5rn4lie"]
+
+[ext_resource type="Script" uid="uid://cpvk5s3x3offc" path="res://Scripts/wasp.gd" id="1_4wvjm"]
+[ext_resource type="Texture2D" uid="uid://cmeybm67es161" path="res://Assets/Sprites/Creatures/sprie_sheet_wasp_flying.png" id="2_4wvjm"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4wvjm"]
+radius = 17.0
+height = 62.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vr6ll"]
+atlas = ExtResource("2_4wvjm")
+region = Rect2(0, 0, 630, 805)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i8uob"]
+atlas = ExtResource("2_4wvjm")
+region = Rect2(630, 0, 630, 805)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bntxp"]
+atlas = ExtResource("2_4wvjm")
+region = Rect2(0, 805, 630, 805)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n8uva"]
+atlas = ExtResource("2_4wvjm")
+region = Rect2(630, 805, 630, 805)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vr6ll"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vr6ll")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i8uob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bntxp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n8uva")
+}],
+"loop": true,
+"name": &"default",
+"speed": 30.0
+}]
+
+[node name="wasp" type="Area2D"]
+z_index = 6
+collision_mask = 2
+script = ExtResource("1_4wvjm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_4wvjm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_vr6ll")
+autoplay = "default"
+frame_progress = 0.246974
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

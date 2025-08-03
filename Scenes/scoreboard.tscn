@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://b4piodq1b1dmu"]
+
+[ext_resource type="Texture2D" uid="uid://brqldfpp085il" path="res://Assets/UI/Miscellanious/score_board.png" id="1_53buj"]
+[ext_resource type="Script" uid="uid://gc6m3el4iutm" path="res://Scripts/score_label.gd" id="2_7bodn"]
+[ext_resource type="Script" uid="uid://br4c4e1n6v586" path="res://Scripts/scoreboard.gd" id="2_dlyme"]
+[ext_resource type="Script" uid="uid://dgw38deu7lpms" path="res://Scripts/goal_label.gd" id="4_8dsrb"]
+
+[sub_resource type="FontFile" id="FontFile_8dsrb"]
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+
+[sub_resource type="FontFile" id="FontFile_t5fgr"]
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+
+[node name="Scoreboard" type="Sprite2D"]
+texture = ExtResource("1_53buj")
+script = ExtResource("2_dlyme")
+
+[node name="ScoreLabel" type="RichTextLabel" parent="."]
+offset_left = -26.0
+offset_top = -34.0
+offset_right = 87.0
+offset_bottom = 19.0
+theme_override_fonts/normal_font = SubResource("FontFile_8dsrb")
+theme_override_font_sizes/normal_font_size = 32
+text = "5000
+"
+script = ExtResource("2_7bodn")
+color = Color(0.294118, 0.0941176, 0.0392157, 1)
+
+[node name="GoalLabel" type="RichTextLabel" parent="."]
+offset_left = -2.0
+offset_top = 26.0
+offset_right = 119.0
+offset_bottom = 70.0
+theme_override_fonts/normal_font = SubResource("FontFile_t5fgr")
+theme_override_font_sizes/normal_font_size = 16
+text = "5000
+"
+script = ExtResource("4_8dsrb")
+color = Color(0.294118, 0.0941176, 0.0392157, 1)
