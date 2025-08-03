@@ -1,12 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://d2smjd2mabxsc"]
+[gd_scene load_steps=13 format=3 uid="uid://d2smjd2mabxsc"]
 
 [ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/frame_thread.tscn" id="1_vk57k"]
 [ext_resource type="PackedScene" uid="uid://dn2b5bcbl5j78" path="res://Scenes/spider.tscn" id="3_xfk5q"]
 [ext_resource type="Texture2D" uid="uid://cna2dwayaxq5d" path="res://Assets/Sprites/Backgrounds/Bg1.png" id="4_7p6j4"]
 [ext_resource type="PackedScene" uid="uid://qyetern4ydyv" path="res://Scenes/insect_spawner.tscn" id="4_6444e"]
 [ext_resource type="PackedScene" uid="uid://b4piodq1b1dmu" path="res://Scenes/scoreboard.tscn" id="5_6444e"]
-[ext_resource type="Script" uid="uid://kf5txjfl6gnc" path="res://Scripts/progress_bar.gd" id="6_evi0p"]
 [ext_resource type="PackedScene" uid="uid://cdexl6ljljvvy" path="res://Scenes/countdown.tscn" id="7_lsmp6"]
+[ext_resource type="PackedScene" uid="uid://cjrpl51xljqhi" path="res://Scenes/progress_bar.tscn" id="7_xrdnt"]
+[ext_resource type="PackedScene" uid="uid://csh82sjxaxlob" path="res://Scenes/audio.tscn" id="8_xrdnt"]
+[ext_resource type="PackedScene" uid="uid://dhmcm0o7dreu4" path="res://Scenes/popup_spawner.tscn" id="9_wrinw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xfk5q"]
 radius = 442.45
@@ -143,24 +145,13 @@ texture = ExtResource("4_7p6j4")
 
 [node name="InsectSpawner" parent="." node_paths=PackedStringArray("frames") instance=ExtResource("4_6444e")]
 frames = [NodePath("../FrameThreads/Line 1"), NodePath("../FrameThreads/Line 2"), NodePath("../FrameThreads/Line 3"), NodePath("../FrameThreads/Line 4"), NodePath("../FrameThreads/Line 5"), NodePath("../FrameThreads/Line 6")]
-Level_1 = Array[float]([5.0, 120.0])
+Level_1 = Array[float]([60.0, 120.0])
 
 [node name="Scoreboard" parent="." instance=ExtResource("5_6444e")]
 position = Vector2(432, 3)
-one_star = -1
-two_star = 1
-three_star = 2
-
-[node name="ProgressBar" type="ProgressBar" parent="." node_paths=PackedStringArray("spider")]
-offset_left = -425.0
-offset_top = -353.0
-offset_right = -289.0
-offset_bottom = -326.0
-show_percentage = false
-script = ExtResource("6_evi0p")
-spider = NodePath("../spider")
-
-[node name="Timer" type="Timer" parent="ProgressBar"]
+one_star = 2000
+two_star = 2400
+three_star = 2800
 
 [node name="Countdown" parent="." instance=ExtResource("7_lsmp6")]
 offset_left = 422.0
@@ -170,15 +161,28 @@ offset_bottom = 131.0
 theme_override_fonts/normal_font = SubResource("FontFile_lsmp6")
 theme_override_font_sizes/bold_italics_font_size = 3
 
+[node name="ProgressBar" parent="." node_paths=PackedStringArray("spider") instance=ExtResource("7_xrdnt")]
+offset_left = -400.0
+offset_top = -330.0
+offset_right = -264.0
+offset_bottom = -303.0
+spider = NodePath("../spider")
+
+[node name="Audio" parent="." instance=ExtResource("8_xrdnt")]
+offset_left = -200.0
+offset_top = -390.0
+offset_right = -27.0
+offset_bottom = -211.0
+
+[node name="PopupSpawner" parent="." node_paths=PackedStringArray("spider") instance=ExtResource("9_wrinw")]
+spider = NodePath("../spider")
+
 [connection signal="body_entered" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_entered"]
 [connection signal="body_exited" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_exited"]
 [connection signal="InsectEaten" from="spider" to="InsectSpawner" method="_on_spider_insect_eaten"]
 [connection signal="InsectEaten" from="spider" to="Scoreboard" method="_on_spider_insect_eaten"]
-[connection signal="InsectEaten" from="spider" to="ProgressBar" method="_on_spider_insect_eaten"]
 [connection signal="LoopCreated" from="spider" to="Scoreboard" method="_on_spider_loop_created"]
 [connection signal="ThreadCreated" from="spider" to="InsectSpawner" method="_on_spider_thread_created"]
 [connection signal="ThreadCreated" from="spider" to="Scoreboard" method="_on_spider_thread_created"]
-[connection signal="ThreadCreated" from="spider" to="ProgressBar" method="_on_spider_thread_created"]
 [connection signal="InsectCreated" from="InsectSpawner" to="spider" method="_on_insect_spawner_insect_created"]
 [connection signal="WaspCreated" from="InsectSpawner" to="spider" method="_on_insect_spawner_wasp_created"]
-[connection signal="timeout" from="ProgressBar/Timer" to="ProgressBar" method="_on_timer_timeout"]

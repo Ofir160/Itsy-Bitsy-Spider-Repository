@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://hupcqkebb52v"]
+
+[ext_resource type="Texture2D" uid="uid://bbhl1usy6bncv" path="res://Assets/Sprites/Pop ups/fly_eaten_pop_ups.png" id="1_8l8dr"]
+
+[node name="FlyEaten" type="Sprite2D"]
+z_index = 8
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_8l8dr")

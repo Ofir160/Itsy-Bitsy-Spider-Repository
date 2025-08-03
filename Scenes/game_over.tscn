@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://dhxhyryhpieii"]
+[gd_scene load_steps=7 format=3 uid="uid://dhxhyryhpieii"]
 
 [ext_resource type="Script" uid="uid://co1yvuiu04l53" path="res://Scripts/game_over.gd" id="1_8fo1c"]
 [ext_resource type="Texture2D" uid="uid://bhkyyvg6hj7mj" path="res://Assets/Sprites/Backgrounds/game_over_screen.png" id="1_ojehl"]
+[ext_resource type="Texture2D" uid="uid://cwu43tqb65g83" path="res://Assets/UI/Buttons/Untitled_Artwork-8.png" id="3_eoghk"]
+[ext_resource type="Texture2D" uid="uid://bn13ypk08d5da" path="res://Assets/UI/Buttons/Untitled_Artwork-7.png" id="4_14u15"]
+[ext_resource type="AudioStream" uid="uid://buvr4r0y6d3mv" path="res://Assets/Audio/SFX/click-2-124467.mp3" id="5_14u15"]
+[ext_resource type="AudioStream" uid="uid://d4lb0pa8ykghb" path="res://Assets/Audio/SFX/game_over.mp3" id="6_j3ryr"]
 
 [node name="GameOver" type="Node2D"]
 script = ExtResource("1_8fo1c")
@@ -13,7 +17,23 @@ texture = ExtResource("1_ojehl")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="Try Again" type="TextureButton" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -116.0
+offset_top = 84.0
+offset_right = 512.0
+offset_bottom = 227.0
+grow_horizontal = 0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("3_eoghk")
+texture_hover = ExtResource("4_14u15")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Try Again"]
+stream = ExtResource("5_14u15")
+bus = &"SFX"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_j3ryr")
 
 [connection signal="pressed" from="Try Again" to="." method="_on_try_again_pressed"]

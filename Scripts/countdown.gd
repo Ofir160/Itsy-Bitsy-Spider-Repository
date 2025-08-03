@@ -1,6 +1,6 @@
 extends RichTextLabel
 
-const TIME_PER_LEVEL = 2
+const TIME_PER_LEVEL = 180
 
 @onready var scoreboard: Scoreboard = $"../Scoreboard"
 @export var color : Color

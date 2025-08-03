@@ -10,6 +10,8 @@ signal LoopCreated()
 @export var origin_connection : Vector2
 @onready var timer: Timer = $Timer
 @export var spiral_threads : Array[SpiralThread]
+@onready var audio_stream_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 const SPEED = 200.0
 const DEGREE_ERROR = 10 * PI / 180
@@ -18,6 +20,10 @@ const ORIGIN_TURN_TIME = 0.2
 const FULL_TURN_TIME = 0.5
 const SPOOL_ON_CONNECTION = 0.15
 const SPOOL_BORDER = 75.0
+
+const EAT_FLY = preload("res://Assets/Audio/SFX/eat_fly.mp3")
+const MAKE_CONNECTION = preload("res://Assets/Audio/SFX/make_connection.mp3")
+const SPIDER_WALK = preload("res://Assets/Audio/SFX/spider_walk.mp3")
 
 var thread_scene = preload("res://Scenes/spiral_thread.tscn")
 var current_frame : FrameThread
@@ -61,6 +67,8 @@ func _physics_process(delta: float) -> void:
 	if not lerping:
 		if Input.is_action_pressed("MoveForward"):
 			move(delta)
+		else:
+			animated_sprite.play("Idle")
 		if Input.get_axis("TurnLeft", "TurnRight") != 0:
 			turn()
 		if Input.is_action_just_pressed("Spool"):
@@ -88,6 +96,11 @@ func _physics_process(delta: float) -> void:
 
 func move(delta : float) -> void:
 	if move_on_thread:
+		
+		audio_stream_player.stream = SPIDER_WALK
+		audio_stream_player.play()
+		animated_sprite.play("Move")
+		
 		var orientation : Vector2 = Vector2(cos(-rotation), sin(rotation))
 		position += orientation * SPEED * delta
 		current_thread = turn_to_thread
@@ -183,6 +196,11 @@ func move(delta : float) -> void:
 				
 			pass
 	elif current_frame:
+		
+		animated_sprite.play("Move")
+		audio_stream_player.stream = SPIDER_WALK
+		audio_stream_player.play()
+		
 		# If we are on a frame
 		if correct_angle_frame(rotation) or correct_angle_frame(fmod(PI + rotation, 2.0 * PI)):
 			current_thread = null
@@ -702,6 +720,9 @@ func end_spool()-> void:
 								get_tree().current_scene.add_child(thread_instance)
 								ThreadCreated.emit(thread_instance)
 								
+								audio_stream_player.stream = MAKE_CONNECTION
+								audio_stream_player.play()
+								
 								spool_thread.queue_free()
 								spooling = false
 								# update lists
@@ -751,6 +772,9 @@ func end_spool()-> void:
 							thread_instance.PointB = nodeB
 							get_tree().current_scene.add_child(thread_instance)
 							ThreadCreated.emit(thread_instance)
+							
+							audio_stream_player.stream = MAKE_CONNECTION
+							audio_stream_player.play()
 							
 							spool_thread.queue_free()
 							spooling = false
@@ -915,6 +939,8 @@ func _on_insect_spawner_insect_created(insect: Insect) -> void:
 	
 func _on_insect_eaten(insect : Insect) -> void:
 	InsectEaten.emit(insect)
+	audio_stream_player.stream = EAT_FLY
+	audio_stream_player.play()
 
 func _on_insect_spawner_wasp_created(wasp: Wasp) -> void:
 	wasp.spider = self

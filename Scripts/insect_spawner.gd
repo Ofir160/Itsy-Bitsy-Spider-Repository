@@ -12,8 +12,8 @@ signal WaspCreated(wasp : Wasp)
 @onready var insect_timer: Timer = $InsectTimer
 @onready var wasp_timer: Timer = $WaspTimer
 
-const MINIMUM_TIME : float = 2
-const MAXIMUM_TIME : float = 60
+const MINIMUM_TIME : float = 5
+const MAXIMUM_TIME : float = 30
 const FRAME_LENGTH : float = 350.0
 
 var threads : Array[SpiralThread]
@@ -31,11 +31,11 @@ var wasp_scene = preload("res://Scenes/wasp.tscn")
 func _ready() -> void:
 	if GameManager.playing:
 		match GameManager.current_scene:
-			1:
+			2:
 				chosen_wasp_array = Level_1
-			4:
+			5:
 				chosen_wasp_array = Level_2
-			8:
+			9:
 				chosen_wasp_array = Level_3
 	wasp_timer.wait_time = chosen_wasp_array[0]
 	wasp_timer.start()

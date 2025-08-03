@@ -8,16 +8,16 @@ extends Sprite2D
 @export var three_star : int
 
 func _ready() -> void:
-	goal_label.goal = one_star
+	goal_label.init(one_star)
 
 func _on_spider_insect_eaten(insect: Insect) -> void:
-	score_label.change_score(50)
+	score_label.change_score(10)
 
 func _on_spider_thread_created(thread: SpiralThread) -> void:
-	score_label.change_score(500)
+	score_label.change_score(100)
 
 func _on_spider_loop_created() -> void:
-	score_label.change_score(1000)
+	score_label.change_score(200)
 
 func check_stars() -> int:
 	if score_label.score > one_star:

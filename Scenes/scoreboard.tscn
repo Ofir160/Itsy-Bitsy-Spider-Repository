@@ -6,6 +6,9 @@
 [ext_resource type="Script" uid="uid://dgw38deu7lpms" path="res://Scripts/goal_label.gd" id="4_8dsrb"]
 
 [sub_resource type="FontFile" id="FontFile_8dsrb"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -18,6 +21,9 @@ cache/0/32/0/underline_thickness = 0.0
 cache/0/32/0/scale = 1.0
 
 [sub_resource type="FontFile" id="FontFile_t5fgr"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0

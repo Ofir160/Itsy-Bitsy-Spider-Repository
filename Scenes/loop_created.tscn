@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2kyddxcf4km2"]
+
+[ext_resource type="Texture2D" uid="uid://d1dxgjsp53tci" path="res://Assets/Sprites/Pop ups/Untitled_Artwork.png" id="1_7cmds"]
+
+[node name="LoopCompleted" type="Sprite2D"]
+z_index = 8
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_7cmds")

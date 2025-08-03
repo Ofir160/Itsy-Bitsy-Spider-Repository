@@ -9,12 +9,12 @@ var current_value : int = 100
 
 func _ready() -> void:
 	value = current_value
-
+	spider.ThreadCreated.connect(_on_spider_thread_created)
+	spider.InsectEaten.connect(_on_spider_insect_eaten)
 	
 func _on_spider_insect_eaten(insect: Insect) -> void:
 	current_value += FLY_EATEN
 	update_value()
-
 
 func _on_spider_thread_created(thread: SpiralThread) -> void:
 	current_value += THREAD_MADE

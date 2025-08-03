@@ -1,15 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://cjrpl51xljqhi"]
+[gd_scene load_steps=3 format=3 uid="uid://cjrpl51xljqhi"]
 
 [ext_resource type="Script" uid="uid://kf5txjfl6gnc" path="res://Scripts/progress_bar.gd" id="1_gsm4l"]
+[ext_resource type="Texture2D" uid="uid://w8qu3ewqjrad" path="res://Assets/UI/Miscellanious/silk_bar_bg.png" id="2_r5tkt"]
 
 [node name="ProgressBar" type="ProgressBar"]
-offset_left = -425.0
-offset_top = -353.0
-offset_right = -289.0
-offset_bottom = -326.0
+z_index = 3
+offset_left = -418.0
+offset_top = -350.0
+offset_right = -282.0
+offset_bottom = -323.0
 show_percentage = false
 script = ExtResource("1_gsm4l")
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(69, 5)
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("2_r5tkt")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
