@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://t5ojwa25nvo8"]
+
+[ext_resource type="Script" uid="uid://bv523oavg02a6" path="res://Scripts/introduction.gd" id="1_1ba6r"]
+[ext_resource type="Texture2D" uid="uid://cna2dwayaxq5d" path="res://Assets/Sprites/Backgrounds/Bg1.png" id="2_n2tt8"]
+[ext_resource type="Texture2D" uid="uid://c8vndl44v7cmn" path="res://Assets/Sprites/Pop ups/Instructions .png" id="3_koc8d"]
+[ext_resource type="Texture2D" uid="uid://b0a5o4n2w84sl" path="res://Assets/UI/Miscellanious/instructions_2.png" id="4_qca35"]
+[ext_resource type="Texture2D" uid="uid://cpc70v35dqq2x" path="res://Assets/UI/Buttons/Untitled_Artwork-6 2.png" id="5_d63n1"]
+[ext_resource type="AudioStream" uid="uid://buvr4r0y6d3mv" path="res://Assets/Audio/SFX/click-2-124467.mp3" id="6_hj457"]
+
+[node name="Introduction" type="Node2D"]
+script = ExtResource("1_1ba6r")
+
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("2_n2tt8")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="TextureButton" type="TextureButton" parent="."]
+offset_left = -513.0
+offset_top = -384.0
+offset_right = 2219.0
+offset_bottom = 1664.0
+scale = Vector2(0.375, 0.375)
+toggle_mode = true
+texture_normal = ExtResource("3_koc8d")
+texture_pressed = ExtResource("4_qca35")
+
+[node name="Exit" type="TextureButton" parent="."]
+offset_left = 366.0
+offset_top = -388.0
+offset_right = 539.0
+offset_bottom = -209.0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("5_d63n1")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Exit"]
+stream = ExtResource("6_hj457")
+
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]

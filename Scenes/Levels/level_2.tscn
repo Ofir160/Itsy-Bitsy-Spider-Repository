@@ -1,0 +1,115 @@
+[gd_scene load_steps=11 format=3 uid="uid://dxms3rfpyimx0"]
+
+[ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/frame_thread.tscn" id="1_pnnky"]
+[ext_resource type="PackedScene" uid="uid://dn2b5bcbl5j78" path="res://Scenes/spider.tscn" id="2_blpqv"]
+[ext_resource type="Texture2D" uid="uid://b4i028386lgn1" path="res://Assets/Sprites/Backgrounds/Bg2.png" id="3_1jlnc"]
+[ext_resource type="PackedScene" uid="uid://qyetern4ydyv" path="res://Scenes/insect_spawner.tscn" id="4_u40f0"]
+[ext_resource type="PackedScene" uid="uid://b4piodq1b1dmu" path="res://Scenes/scoreboard.tscn" id="5_0x4y1"]
+[ext_resource type="PackedScene" uid="uid://cdexl6ljljvvy" path="res://Scenes/countdown.tscn" id="6_uqiic"]
+[ext_resource type="PackedScene" uid="uid://cjrpl51xljqhi" path="res://Scenes/progress_bar.tscn" id="7_eopvx"]
+[ext_resource type="PackedScene" uid="uid://csh82sjxaxlob" path="res://Scenes/audio.tscn" id="8_t27xo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xfk5q"]
+radius = 442.45
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7p6j4"]
+radius = 3.0
+
+[node name="Level 2" type="Node2D"]
+
+[node name="Gravitational Attractor" type="Area2D" parent="."]
+position = Vector2(-1, -6)
+collision_layer = 0
+gravity_space_override = 3
+gravity_point = true
+gravity_point_center = Vector2(0, 0)
+gravity_direction = Vector2(0, 0)
+gravity = 100.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gravitational Attractor"]
+shape = SubResource("CircleShape2D_xfk5q")
+
+[node name="Origin Snap Zone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Origin Snap Zone"]
+shape = SubResource("CircleShape2D_7p6j4")
+
+[node name="Camera" type="Camera2D" parent="."]
+
+[node name="FrameThreads" type="Node" parent="."]
+
+[node name="Line 1" parent="FrameThreads" instance=ExtResource("1_pnnky")]
+rotation = 4.71239
+points = PackedVector2Array(0, 0, 400, 0)
+
+[node name="Line 2" parent="FrameThreads" instance=ExtResource("1_pnnky")]
+rotation = 5.75959
+points = PackedVector2Array(0, 0, 600, 0)
+
+[node name="Line 3" parent="FrameThreads" instance=ExtResource("1_pnnky")]
+rotation = 0.523599
+points = PackedVector2Array(0, 0, 600, 0)
+
+[node name="Line 4" parent="FrameThreads" instance=ExtResource("1_pnnky")]
+rotation = 1.5708
+points = PackedVector2Array(0, 0, 400, 0)
+
+[node name="Line 5" parent="FrameThreads" instance=ExtResource("1_pnnky")]
+rotation = 2.61799
+points = PackedVector2Array(0, 0, 600, 0)
+
+[node name="Line 6" parent="FrameThreads" instance=ExtResource("1_pnnky")]
+rotation = 3.66519
+points = PackedVector2Array(0, 0, 600, 0)
+
+[node name="spider" parent="." node_paths=PackedStringArray("frames", "initial_frame") instance=ExtResource("2_blpqv")]
+position = Vector2(0, -100)
+rotation = 4.71239
+frames = [NodePath("../FrameThreads/Line 1"), NodePath("../FrameThreads/Line 2"), NodePath("../FrameThreads/Line 3"), NodePath("../FrameThreads/Line 4"), NodePath("../FrameThreads/Line 5"), NodePath("../FrameThreads/Line 6")]
+initial_frame = NodePath("../FrameThreads/Line 1")
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -1
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("3_1jlnc")
+
+[node name="InsectSpawner" parent="." node_paths=PackedStringArray("frames") instance=ExtResource("4_u40f0")]
+frames = [NodePath("../FrameThreads/Line 1"), NodePath("../FrameThreads/Line 2"), NodePath("../FrameThreads/Line 3"), NodePath("../FrameThreads/Line 4"), NodePath("../FrameThreads/Line 5"), NodePath("../FrameThreads/Line 6")]
+Level_1 = Array[float]([60.0, 120.0])
+
+[node name="Scoreboard" parent="." instance=ExtResource("5_0x4y1")]
+position = Vector2(432, 3)
+one_star = -1
+two_star = 3000
+three_star = 3200
+
+[node name="Countdown" parent="." instance=ExtResource("6_uqiic")]
+offset_left = 435.0
+offset_top = 72.0
+offset_right = 528.0
+offset_bottom = 120.0
+
+[node name="ProgressBar" parent="." node_paths=PackedStringArray("spider") instance=ExtResource("7_eopvx")]
+offset_left = -400.0
+offset_top = -330.0
+offset_right = -264.0
+offset_bottom = -303.0
+spider = NodePath("../spider")
+
+[node name="Audio" parent="." instance=ExtResource("8_t27xo")]
+offset_left = -200.0
+offset_top = -390.0
+offset_right = -27.0
+offset_bottom = -211.0
+
+[connection signal="body_entered" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_entered"]
+[connection signal="body_exited" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_exited"]
+[connection signal="InsectEaten" from="spider" to="InsectSpawner" method="_on_spider_insect_eaten"]
+[connection signal="InsectEaten" from="spider" to="Scoreboard" method="_on_spider_insect_eaten"]
+[connection signal="LoopCreated" from="spider" to="Scoreboard" method="_on_spider_loop_created"]
+[connection signal="ThreadCreated" from="spider" to="InsectSpawner" method="_on_spider_thread_created"]
+[connection signal="ThreadCreated" from="spider" to="Scoreboard" method="_on_spider_thread_created"]
+[connection signal="InsectCreated" from="InsectSpawner" to="spider" method="_on_insect_spawner_insect_created"]
+[connection signal="WaspCreated" from="InsectSpawner" to="spider" method="_on_insect_spawner_wasp_created"]

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://8hybe1dmbbtn"]
+
+[ext_resource type="Texture2D" uid="uid://dxddex1dfab2f" path="res://Assets/Sprites/Cutscenes/credits_cutscene.png" id="1_eeebg"]
+
+[node name="Cutscene 10" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("1_eeebg")
+
+[node name="Camera2D" type="Camera2D" parent="."]

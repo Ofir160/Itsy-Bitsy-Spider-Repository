@@ -1,0 +1,33 @@
+[gd_scene load_steps=8 format=3 uid="uid://3m5scubl3fdc"]
+
+[ext_resource type="Texture2D" uid="uid://hjtvcng4ru7v" path="res://Assets/Sprites/Cutscenes/cutscene_01_11.png" id="1_kulqj"]
+[ext_resource type="PackedScene" uid="uid://dkmer0anytvly" path="res://Scenes/dialogue.tscn" id="2_bl2sy"]
+[ext_resource type="Texture2D" uid="uid://dol5d7vg1byow" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_1.png" id="3_fydfr"]
+[ext_resource type="Texture2D" uid="uid://dmljx5sfj65fs" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_2.png" id="4_kqdvk"]
+[ext_resource type="Texture2D" uid="uid://bo8xarc505avg" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_3.png" id="5_mybfj"]
+[ext_resource type="Texture2D" uid="uid://fd4u2qhpnh7u" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_4.png" id="6_eymhe"]
+[ext_resource type="FontFile" uid="uid://cfk5ojiivqkv8" path="res://Assets/Roboto-VariableFont_wdth,wght.ttf" id="7_ehcm7"]
+
+[node name="Cutscene 1" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("1_kulqj")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Dialogue" parent="." instance=ExtResource("2_bl2sy")]
+position = Vector2(0, -500)
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("3_fydfr")
+dialogue_pngs = Array[Texture]([ExtResource("3_fydfr"), ExtResource("4_kqdvk"), ExtResource("5_mybfj"), ExtResource("6_eymhe")])
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = -181.0
+offset_top = 279.0
+offset_right = 185.0
+offset_bottom = 332.0
+theme_override_fonts/normal_font = ExtResource("7_ehcm7")
+theme_override_font_sizes/mono_font_size = 32
+theme_override_font_sizes/normal_font_size = 32
+text = "Press space to continue"

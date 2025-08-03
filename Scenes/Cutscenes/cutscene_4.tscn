@@ -1,0 +1,23 @@
+[gd_scene load_steps=8 format=3 uid="uid://cytwb47aymwk"]
+
+[ext_resource type="Texture2D" uid="uid://bgu4fb8dqsxyr" path="res://Assets/Sprites/Cutscenes/cutscene_21.png" id="1_hvxjt"]
+[ext_resource type="PackedScene" uid="uid://dkmer0anytvly" path="res://Scenes/dialogue.tscn" id="2_qwt2x"]
+[ext_resource type="Texture2D" uid="uid://c7i3knobhbgc0" path="res://Assets/Dialogue/Cutscene 2/cutscene_2_1.png" id="3_nq160"]
+[ext_resource type="Texture2D" uid="uid://cdppyxpithabh" path="res://Assets/Dialogue/Cutscene 4/cutscene_4_1.png" id="4_txbw0"]
+[ext_resource type="Texture2D" uid="uid://cjjks57dk7kox" path="res://Assets/Dialogue/Cutscene 4/cutscene_4_2.png" id="5_8qkhd"]
+[ext_resource type="Texture2D" uid="uid://cb1ahvb1l3i5q" path="res://Assets/Dialogue/Cutscene 4/cutscene_4_3.png" id="6_hlniv"]
+[ext_resource type="Texture2D" uid="uid://8f6s6tsujm85" path="res://Assets/Dialogue/Cutscene 4/cutscene_4_4.png" id="7_y3fsw"]
+
+[node name="Cutscene 4" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("1_hvxjt")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Dialogue" parent="." instance=ExtResource("2_qwt2x")]
+position = Vector2(0, -500)
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("3_nq160")
+dialogue_pngs = Array[Texture]([ExtResource("4_txbw0"), ExtResource("5_8qkhd"), ExtResource("6_hlniv"), ExtResource("7_y3fsw")])

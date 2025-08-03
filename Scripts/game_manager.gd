@@ -5,27 +5,27 @@ var level_stars : int
 
 const DYING_TIME = 0.5
 
-var cutscene_1 = "res://Scenes/cutscene_1.tscn"
-var introduction = "res://Scenes/introduction.tscn"
-var level_1 = "res://Scenes/level_1.tscn"
-var cutscene_2 = "res://Scenes/cutscene_2.tscn"
-var cutscene_3 = "res://Scenes/cutscene_3.tscn"
-var level_2 = "res://Scenes/level_2.tscn"
-var cutscene_4 = "res://Scenes/cutscene_4.tscn"
-var cutscene_5 = "res://Scenes/cutscene_5.tscn"
-var cutscene_6 = "res://Scenes/cutscene_6.tscn"
-var level_3 = "res://Scenes/level_3.tscn"
-var cutscene_7 = "res://Scenes/cutscene_7.tscn"
-var cutscene_8 = "res://Scenes/cutscene_8.tscn"
-var cutscene_9 = "res://Scenes/cutscene_9.tscn"
-var cutscene_10 = "res://Scenes/cutscene_10.tscn"
+var cutscene_1 = "res://Scenes/Cutscenes/cutscene_1.tscn"
+var introduction = "res://Scenes/Cutscenes/introduction.tscn"
+var level_1 = "res://Scenes/Levels/level_1.tscn"
+var cutscene_2 = "res://Scenes/Cutscenes/cutscene_2.tscn"
+var cutscene_3 = "res://Scenes/Cutscenes/cutscene_3.tscn"
+var level_2 = "res://Scenes/Levels/level_2.tscn"
+var cutscene_4 = "res://Scenes/Cutscenes/cutscene_4.tscn"
+var cutscene_5 = "res://Scenes/Cutscenes/cutscene_5.tscn"
+var cutscene_6 = "res://Scenes/Cutscenes/cutscene_6.tscn"
+var level_3 = "res://Scenes/Levels/level_3.tscn"
+var cutscene_7 = "res://Scenes/Cutscenes/cutscene_7.tscn"
+var cutscene_8 = "res://Scenes/Cutscenes/cutscene_8.tscn"
+var cutscene_9 = "res://Scenes/Cutscenes/cutscene_9.tscn"
+var cutscene_10 = "res://Scenes/Cutscenes/cutscene_10.tscn"
 
 var scenes
 var music
 
-var game_over_scene = "res://Scenes/game_over.tscn"
-var level_selector = "res://Scenes/level_select.tscn"
-var level_complete = "res://Scenes/level_complete.tscn"
+var game_over_scene = "res://Scenes/Cutscenes/game_over.tscn"
+var level_selector = "res://Scenes/Cutscenes/level_select.tscn"
+var level_complete = "res://Scenes/Cutscenes/level_complete.tscn"
 
 # First cutscene and eight cutscene
 const morning = preload("res://Assets/Audio/Music/Morning.mp3")
