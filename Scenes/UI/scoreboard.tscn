@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://b4piodq1b1dmu"]
 
 [ext_resource type="Texture2D" uid="uid://brqldfpp085il" path="res://Assets/UI/Miscellanious/score_board.png" id="1_53buj"]
-[ext_resource type="Script" uid="uid://gc6m3el4iutm" path="res://Scripts/score_label.gd" id="2_7bodn"]
-[ext_resource type="Script" uid="uid://br4c4e1n6v586" path="res://Scripts/scoreboard.gd" id="2_dlyme"]
+[ext_resource type="Script" uid="uid://gc6m3el4iutm" path="res://Scripts/UI/score_label.gd" id="2_7bodn"]
+[ext_resource type="Script" uid="uid://br4c4e1n6v586" path="res://Scripts/UI/scoreboard.gd" id="2_dlyme"]
 [ext_resource type="FontFile" uid="uid://cfk5ojiivqkv8" path="res://Assets/Roboto-VariableFont_wdth,wght.ttf" id="3_t5fgr"]
-[ext_resource type="Script" uid="uid://dgw38deu7lpms" path="res://Scripts/goal_label.gd" id="4_8dsrb"]
+[ext_resource type="Script" uid="uid://dgw38deu7lpms" path="res://Scripts/UI/goal_label.gd" id="4_8dsrb"]
 
 [node name="Scoreboard" type="Sprite2D"]
 texture = ExtResource("1_53buj")

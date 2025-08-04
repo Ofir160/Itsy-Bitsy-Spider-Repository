@@ -25,8 +25,8 @@ var wasp_number : int = 0
 var current_time : float = 0
 
 var waiting : bool
-var insect_scene = preload("res://Scenes/insect.tscn")
-var wasp_scene = preload("res://Scenes/wasp.tscn")
+var insect_scene = preload("res://Scenes/Creatures/Insects/insect.tscn")
+var wasp_scene = preload("res://Scenes/Creatures/Insects/wasp.tscn")
 
 func _ready() -> void:
 	if GameManager.playing:

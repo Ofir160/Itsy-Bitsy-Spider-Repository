@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bodndpecf7e0k" path="res://Assets/Sprites/Creatures/Alive Bug.png" id="1_4fqcp"]
 [ext_resource type="Texture2D" uid="uid://djapmbvstkvh7" path="res://Assets/Sprites/Creatures/Dead Bug.png" id="2_vaib5"]
-[ext_resource type="Script" uid="uid://c66t1e4y64qvw" path="res://Scripts/insect.gd" id="3_vaib5"]
+[ext_resource type="Script" uid="uid://c66t1e4y64qvw" path="res://Scripts/Creatures/Insects/insect.gd" id="3_vaib5"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vaib5"]
 animations = [{

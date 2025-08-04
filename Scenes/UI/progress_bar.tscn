@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cjrpl51xljqhi"]
 
-[ext_resource type="Script" uid="uid://kf5txjfl6gnc" path="res://Scripts/progress_bar.gd" id="1_gsm4l"]
+[ext_resource type="Script" uid="uid://kf5txjfl6gnc" path="res://Scripts/UI/progress_bar.gd" id="1_gsm4l"]
 [ext_resource type="Texture2D" uid="uid://w8qu3ewqjrad" path="res://Assets/UI/Miscellanious/silk_bar_bg.png" id="2_r5tkt"]
 
 [node name="ProgressBar" type="ProgressBar"]

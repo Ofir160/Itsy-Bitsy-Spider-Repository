@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c5blymx5a44yw"]
 
 [ext_resource type="Texture2D" uid="uid://cg331uyc23ubl" path="res://Assets/Sprites/Cutscenes/cutscene_7.5.png" id="2_nlv1u"]
-[ext_resource type="PackedScene" uid="uid://dkmer0anytvly" path="res://Scenes/dialogue.tscn" id="2_sphws"]
+[ext_resource type="PackedScene" uid="uid://dkmer0anytvly" path="res://Scenes/UI/dialogue.tscn" id="2_sphws"]
 
 [node name="Cutscene 8" type="Node2D"]
 

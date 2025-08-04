@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://c2qvhe5rn4lie"]
 
-[ext_resource type="Script" uid="uid://cpvk5s3x3offc" path="res://Scripts/wasp.gd" id="1_4wvjm"]
+[ext_resource type="Script" uid="uid://cpvk5s3x3offc" path="res://Scripts/Creatures/Insects/wasp.gd" id="1_4wvjm"]
 [ext_resource type="Texture2D" uid="uid://cmeybm67es161" path="res://Assets/Sprites/Creatures/sprie_sheet_wasp_flying.png" id="2_4wvjm"]
 [ext_resource type="AudioStream" uid="uid://csou0ah2x8gv2" path="res://Assets/Audio/SFX/wasp_buzz.mp3" id="3_vr6ll"]
 

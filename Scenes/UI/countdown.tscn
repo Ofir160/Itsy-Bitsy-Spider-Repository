@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cdexl6ljljvvy"]
 
 [ext_resource type="FontFile" uid="uid://cfk5ojiivqkv8" path="res://Assets/Roboto-VariableFont_wdth,wght.ttf" id="1_acgio"]
-[ext_resource type="Script" uid="uid://cd6k33oabgdfh" path="res://Scripts/countdown.gd" id="1_uxvso"]
+[ext_resource type="Script" uid="uid://cd6k33oabgdfh" path="res://Scripts/UI/countdown.gd" id="1_uxvso"]
 
 [node name="Countdown" type="RichTextLabel"]
 offset_left = 426.0

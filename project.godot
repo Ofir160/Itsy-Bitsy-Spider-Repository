@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-SceneSwitcher="*res://Scripts/scene_switcher.gd"
+SceneSwitcher="*res://Scripts/Globals/scene_switcher.gd"
 GameManager="*res://Scenes/game_manager.tscn"
 
 [display]

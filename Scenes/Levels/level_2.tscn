@@ -1,13 +1,13 @@
 [gd_scene load_steps=11 format=3 uid="uid://dxms3rfpyimx0"]
 
-[ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/frame_thread.tscn" id="1_pnnky"]
-[ext_resource type="PackedScene" uid="uid://dn2b5bcbl5j78" path="res://Scenes/spider.tscn" id="2_blpqv"]
+[ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/Creatures/Spider/Threads/frame_thread.tscn" id="1_pnnky"]
+[ext_resource type="PackedScene" uid="uid://dn2b5bcbl5j78" path="res://Scenes/Creatures/Spider/spider.tscn" id="2_blpqv"]
 [ext_resource type="Texture2D" uid="uid://b4i028386lgn1" path="res://Assets/Sprites/Backgrounds/Bg2.png" id="3_1jlnc"]
-[ext_resource type="PackedScene" uid="uid://qyetern4ydyv" path="res://Scenes/insect_spawner.tscn" id="4_u40f0"]
-[ext_resource type="PackedScene" uid="uid://b4piodq1b1dmu" path="res://Scenes/scoreboard.tscn" id="5_0x4y1"]
-[ext_resource type="PackedScene" uid="uid://cdexl6ljljvvy" path="res://Scenes/countdown.tscn" id="6_uqiic"]
-[ext_resource type="PackedScene" uid="uid://cjrpl51xljqhi" path="res://Scenes/progress_bar.tscn" id="7_eopvx"]
-[ext_resource type="PackedScene" uid="uid://csh82sjxaxlob" path="res://Scenes/audio.tscn" id="8_t27xo"]
+[ext_resource type="PackedScene" uid="uid://qyetern4ydyv" path="res://Scenes/Creatures/Insects/insect_spawner.tscn" id="4_u40f0"]
+[ext_resource type="PackedScene" uid="uid://b4piodq1b1dmu" path="res://Scenes/UI/scoreboard.tscn" id="5_0x4y1"]
+[ext_resource type="PackedScene" uid="uid://cdexl6ljljvvy" path="res://Scenes/UI/countdown.tscn" id="6_uqiic"]
+[ext_resource type="PackedScene" uid="uid://cjrpl51xljqhi" path="res://Scenes/UI/progress_bar.tscn" id="7_eopvx"]
+[ext_resource type="PackedScene" uid="uid://csh82sjxaxlob" path="res://Scenes/UI/audio_button.tscn" id="8_t27xo"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xfk5q"]
 radius = 442.45

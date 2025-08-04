@@ -25,7 +25,7 @@ const EAT_FLY = preload("res://Assets/Audio/SFX/eat_fly.mp3")
 const MAKE_CONNECTION = preload("res://Assets/Audio/SFX/make_connection.mp3")
 const SPIDER_WALK = preload("res://Assets/Audio/SFX/spider_walk.mp3")
 
-var thread_scene = preload("res://Scenes/spiral_thread.tscn")
+var thread_scene = preload("res://Scenes/Creatures/Spider/Threads/frame_thread.tscn")
 var current_frame : FrameThread
 var current_thread : SpiralThread
 

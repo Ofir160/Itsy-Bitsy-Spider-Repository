@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://qyetern4ydyv"]
 
-[ext_resource type="Script" uid="uid://csk4nwdwuk84r" path="res://Scripts/insect_spawner.gd" id="1_ib0yj"]
+[ext_resource type="Script" uid="uid://csk4nwdwuk84r" path="res://Scripts/Creatures/Insects/insect_spawner.gd" id="1_ib0yj"]
 
 [node name="insect_spawner" type="Node"]
 script = ExtResource("1_ib0yj")
