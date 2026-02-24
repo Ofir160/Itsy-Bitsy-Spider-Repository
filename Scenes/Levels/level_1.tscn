@@ -67,7 +67,7 @@ points = PackedVector2Array(0, 0, 600, 0)
 
 [node name="spider" parent="." node_paths=PackedStringArray("frames", "initial_frame") instance=ExtResource("2_u5ghp")]
 position = Vector2(0, -100)
-rotation = 4.71239
+rotation = -1.5708
 frames = [NodePath("../FrameThreads/Line 1"), NodePath("../FrameThreads/Line 2"), NodePath("../FrameThreads/Line 3"), NodePath("../FrameThreads/Line 4"), NodePath("../FrameThreads/Line 5"), NodePath("../FrameThreads/Line 6")]
 initial_frame = NodePath("../FrameThreads/Line 1")
 

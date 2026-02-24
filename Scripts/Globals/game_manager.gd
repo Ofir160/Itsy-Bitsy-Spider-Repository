@@ -57,7 +57,7 @@ var scene_progress : int
 func _ready() -> void:
 	scenes = [cutscene_1, introduction, level_1, cutscene_2, cutscene_3, level_2, cutscene_4, cutscene_5, cutscene_6, level_3, cutscene_7, cutscene_8, cutscene_9, cutscene_10]
 	music = [morning, morning, carpe_diem, carpe_diem, carpe_diem, mischief_maker, montauk_point, montauk_point, intrepid, satiate, royal_coupling, morning, morning, off_to_osaka]
-	current_scene = 0
+	current_scene = 2
 	playing = true
 	audio_stream_player.stream = music[current_scene]
 	audio_stream_player.play()
