@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dmljx5sfj65fs" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_2.png" id="4_kqdvk"]
 [ext_resource type="Texture2D" uid="uid://bo8xarc505avg" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_3.png" id="5_mybfj"]
 [ext_resource type="Texture2D" uid="uid://fd4u2qhpnh7u" path="res://Assets/Dialogue/Cutscene 1/cutscene_1_4.png" id="6_eymhe"]
-[ext_resource type="FontFile" uid="uid://cfk5ojiivqkv8" path="res://Assets/Roboto-VariableFont_wdth,wght.ttf" id="7_ehcm7"]
+[ext_resource type="FontFile" uid="uid://cfk5ojiivqkv8" path="res://Assets/Fonts/Roboto-VariableFont_wdth,wght.ttf" id="7_ehcm7"]
 
 [node name="Cutscene 1" type="Node2D"]
 
