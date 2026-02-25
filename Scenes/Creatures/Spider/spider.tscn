@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://db4wsawqidgfa" path="res://Assets/Sprites/Creatures/Untitled_Artwork 5.png" id="2_sbdki"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gedd4"]
-radius = 0.1
+radius = 1.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gedd4"]
 atlas = ExtResource("2_gedd4")
@@ -70,7 +70,6 @@ collision_mask = 2
 script = ExtResource("1_h33fn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-3, 0)
 shape = SubResource("CircleShape2D_gedd4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
