@@ -8,10 +8,13 @@ signal LoopCreated()
 @export var frames : Array[FrameThread]
 @export var initial_frame : FrameThread
 @export var origin_intersection : Vector2
+@export var origin_area : Area2D
+
 @onready var timer: Timer = $Timer
-@export var spiral_threads : Array[SpiralThread]
 @onready var audio_stream_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
+var spiral_threads : Array[SpiralThread]
 
 const SPEED = 200.0
 const DEGREE_ERROR = 10 * PI / 180
@@ -62,11 +65,13 @@ var silk_left : bool = true
 var intersection_found : bool
 var chosen_intersection : Vector2
 
-var on_intersection : bool
 var intersection : Vector2
+var on_intersection : bool
+var complete_intersection : bool
 
 func _ready() -> void:
 	current_frame_thread = initial_frame
+	origin_area.body_exited.connect(exited_origin)
 	for frame in frames:
 		frame.complete_connections.append(origin_intersection)
 	camera_dimensions = get_viewport().size
@@ -86,37 +91,6 @@ func _physics_process(delta: float) -> void:
 	if spooling:
 		spool_thread.points[1].x = position.x
 		spool_thread.points[1].y = position.y
-	'''
-	if not lerping:
-		if Input.is_action_pressed("MoveForward"):
-			move(delta)
-		else:
-			animated_sprite.play("Idle")
-		if Input.get_axis("TurnLeft", "TurnRight") != 0:
-			turn()
-		if Input.is_action_just_pressed("Spool"):
-			spool()
-		if spooling:
-			spool_thread.points[1].x = position.x
-			spool_thread.points[1].y = position.y
-		if Input.is_action_just_released("Spool") or lerping_spool_released:
-			lerping_spool_released = false
-			if current_frame_thread:
-				# Finish the thread	
-				end_spool()
-			else:
-				# Delete the thread	
-				if spool_thread:
-					spool_thread.queue_free()
-				spooling = false
-	else:
-		if Input.is_action_just_released("Spool"):
-			lerping_spool_released = true
-		
-		var t = (timer.wait_time - timer.time_left) / timer.wait_time
-		rotation = lerp(starting_rotation, desired_rotation, t * t * (3 - 2 * t))
-		position = lerp(starting_position, desired_position, t * t * (3 - 2 * t))
-	'''
 
 func move(delta : float) -> void:
 	if on_spiral_thread:
@@ -256,14 +230,28 @@ func turn_to_mouse() -> void:
 			
 			# If the mouse position is closest to the frame to the left
 			if distance_to_frame_left < distance_to_current and distance_to_frame_left < distance_to_frame_right:
+				position = origin_intersection
 				rotation = frames[left_index].rotation
 				current_frame_thread = frames[left_index]
 			# If the mouse position is closest to the frame to the right
 			elif distance_to_frame_right < distance_to_current and distance_to_frame_right < distance_to_frame_left:
+				position = origin_intersection
 				rotation = frames[right_index].rotation
 				current_frame_thread = frames[right_index]
 		else:
 			var distance_to_current = distance_to_frame(global_mouse_pos, current_frame_thread)
+			if complete_intersection:
+				var distance_to_spiral_left = distance_to_spiral(global_mouse_pos, current_frame_thread.threads_left[intersection])
+				var distance_to_spiral_right = distance_to_spiral(global_mouse_pos, current_frame_thread.threads_right[intersection])
+				
+				if distance_to_spiral_left < distance_to_current and distance_to_spiral_left < distance_to_spiral_right:
+					rotation = current_frame_thread.threads_left[intersection].rotation
+					current_spiral_thread = current_frame_thread.threads_left[intersection]
+				elif distance_to_spiral_right < distance_to_current and distance_to_spiral_right < distance_to_spiral_left:
+					rotation = current_frame_thread.threads_right[intersection].rotation
+					current_spiral_thread = current_frame_thread.threads_right[intersection]
+			else:
+				pass
 			
 	else:
 		if local_mouse_pos.x < -20:
@@ -285,12 +273,29 @@ func distance_to_frame(point : Vector2, frame : FrameThread) -> float:
 		return point.length()
 	else:
 		return (frame_end_point - point).length()
+		
+func distance_to_spiral(point : Vector2, spiral : SpiralThread) -> float:
+	var ab = spiral.PointB.position - spiral.PointA.position
+	var magnitude = ab.length()
+	
+	# Projects the point on to the frame then maps it to a value between 0 and 1
+	# The first / magnitude normalizes the ab vector, the second maps the value to 0 to 1
+	var t = ab.dot(point - spiral.PointA.position) / magnitude / magnitude
+	
+	if t < 1 and t > 0:
+		var numerator = abs(ab.y * point.x - ab.x * point.y + spiral.PointB.position.x * spiral.PointA.position.y - spiral.PointA.position.x * spiral.PointB.position.y)
+		return numerator / magnitude
+	elif t < 0:
+		return (spiral.PointA.position - point).length()
+	else:
+		return (spiral.PointB.position - point).length()
 
 
 func check_on_intersection() -> void:
 	var results : Array = loop_intersections()
-	on_intersection = results[1]
 	intersection = results[0]
+	on_intersection = results[1]
+	complete_intersection = results[2]
 
 ## Returns the frame index
 func modulo_frame_index(index : int) -> int:
@@ -352,10 +357,10 @@ func start_spool() -> void:
 				return
 		
 		spool_start_on_incomplete_connection = false
-		for intersection in current_frame_thread.incomplete_connections:
-			if (position - intersection).length() < INTERSECTION_ERROR:
-				position = intersection
-				spool_start_on_incomplete_connection = true
+		var result = loop_incomplete_intersections()
+		if result[1]:
+			position = result[0]
+			spool_start_on_incomplete_connection = true
 				
 		create_new_spool()
 			
@@ -379,17 +384,38 @@ func _on_timer_timeout() -> void:
 		turning_on_thread = false
 		on_spiral_thread = true
 
-func _on_origin_snap_zone_body_exited(_body: Node2D) -> void:
+func exited_origin(_body: Node2D) -> void:
 	var frame_index = frames.find(current_frame_thread)
 	if not correct_angle_frame(rotation):
 		modulo_frame_index(frame_index + len(frames) / 2)
 		current_frame_thread = frames[frame_index]
-
-## Loops over all connections on the current frame thread and returns the first one that is close enough
+		
+## Loops over all intersections on the current frame thread and returns the first one that is close enough. 
+## Returns the intersection, whether and intersection was found and whether it is a complete or incomplete intersection
 func loop_intersections() -> Array:
+	var complete = loop_complete_intersections()
+	var incomplete = loop_incomplete_intersections()
+	if complete[1]:
+		return [complete[0], true, true]
+	elif incomplete[1]:
+		return [incomplete[0], true, false]
+	return [Vector2.ZERO, false, false]
+	
+## Loops over all complete intersections on the current frame thread and returns the first one that is close enough
+func loop_complete_intersections() -> Array:
 	var _chosen_intersection : Vector2 
 	var _intersection_found : bool
-	for intersection in current_frame_thread.complete_connections + current_frame_thread.incomplete_connections:
+	for intersection in current_frame_thread.complete_connections:
+		if (intersection - position).length() < INTERSECTION_ERROR:
+			_chosen_intersection = intersection
+			_intersection_found = true
+	return [_chosen_intersection, _intersection_found]
+
+## Loops over all incomplete intersections on the current frame thread and returns the first one that is close enough
+func loop_incomplete_intersections() -> Array:
+	var _chosen_intersection : Vector2 
+	var _intersection_found : bool
+	for intersection in current_frame_thread.incomplete_connections:
 		if (intersection - position).length() < INTERSECTION_ERROR:
 			_chosen_intersection = intersection
 			_intersection_found = true
@@ -430,17 +456,29 @@ func end_spool() -> void:
 		return
 		
 	# Can't end the spool too close to a complete intersection
-	for intersection in current_frame_thread.complete_connections:
-		if (position - intersection).length() < INTERSECTION_ERROR:
-			delete_spool()
-			return
-			
+	var complete = loop_complete_intersections()
+	if complete[1]:
+		delete_spool()
+		return
+	
+	var end_right_of_start = index_is_to_the_right(end_index, starting_index)
+	
 	# If the spool is ended close to an incomplete connection
 	var spool_end_on_incomplete_intersection = false
-	for intersection in current_frame_thread.incomplete_connections:
-		if (position - intersection).length() < INTERSECTION_ERROR:
-			position = intersection
-			spool_end_on_incomplete_intersection = true
+	var incomplete = loop_incomplete_intersections()
+	if incomplete[1]:
+		position = incomplete[0]
+		spool_end_on_incomplete_intersection = true
+		
+		# If the spool connects an incomplete connection on the wrong side 
+		if end_right_of_start:
+			if current_frame_thread.threads_left.has(position):
+				delete_spool()
+				return
+		else:
+			if current_frame_thread.threads_right.has(position):
+				delete_spool()
+				return
 	
 	# Create the two nodes on either side of the spiral thread
 	var nodeA : Node2D = Node2D.new()
@@ -477,7 +515,7 @@ func end_spool() -> void:
 		current_frame_thread.incomplete_connections.append(position)
 		
 	# If the current frame thread is to the right of the spool start frame thread
-	if index_is_to_the_right(end_index, starting_index):
+	if end_right_of_start:
 		print("Ended the spool to the right of where the spool was started")
 		spool_start_frame_thread.threads_right[spool_start] = thread_instance
 		current_frame_thread.threads_left[position] = thread_instance

@@ -14,7 +14,7 @@
 radius = 442.45
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7p6j4"]
-radius = 1.0
+radius = 5.0
 
 [node name="Level 1" type="Node2D"]
 
@@ -65,11 +65,12 @@ points = PackedVector2Array(0, 0, 600, 0)
 rotation = 3.66519
 points = PackedVector2Array(0, 0, 600, 0)
 
-[node name="spider" parent="." node_paths=PackedStringArray("frames", "initial_frame") instance=ExtResource("2_u5ghp")]
+[node name="spider" parent="." node_paths=PackedStringArray("frames", "initial_frame", "origin_area") instance=ExtResource("2_u5ghp")]
 position = Vector2(0, -100)
 rotation = 4.71239
 frames = [NodePath("../FrameThreads/Line 1"), NodePath("../FrameThreads/Line 2"), NodePath("../FrameThreads/Line 3"), NodePath("../FrameThreads/Line 4"), NodePath("../FrameThreads/Line 5"), NodePath("../FrameThreads/Line 6")]
 initial_frame = NodePath("../FrameThreads/Line 1")
+origin_area = NodePath("../Origin Snap Zone")
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -1
@@ -109,8 +110,6 @@ offset_bottom = -211.0
 [node name="PopupSpawner" parent="." node_paths=PackedStringArray("spider") instance=ExtResource("9_irw6p")]
 spider = NodePath("../spider")
 
-[connection signal="body_entered" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_entered"]
-[connection signal="body_exited" from="Origin Snap Zone" to="spider" method="_on_origin_snap_zone_body_exited"]
 [connection signal="InsectEaten" from="spider" to="InsectSpawner" method="_on_spider_insect_eaten"]
 [connection signal="InsectEaten" from="spider" to="Scoreboard" method="_on_spider_insect_eaten"]
 [connection signal="LoopCreated" from="spider" to="Scoreboard" method="_on_spider_loop_created"]
