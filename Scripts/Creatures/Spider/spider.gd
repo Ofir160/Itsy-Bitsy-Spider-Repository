@@ -285,6 +285,7 @@ func modulo_frame_index(index : int) -> int:
 	return index % len(frames)
 
 func spool() -> void:
+	'''
 	if silk_left:
 		if len(current_frame_thread.incomplete_intersections) == 0:# If there are no incomplete intersections
 			print("there are no incomplete intersections")
@@ -320,6 +321,8 @@ func spool() -> void:
 				timer.start()
 			else:
 				print("Incomplete intersection too far away!")
+	'''
+	
 			
 func turn() -> void:
 	var results = loop_intersections()

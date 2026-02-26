@@ -59,8 +59,8 @@ func _ready() -> void:
 	music = [morning, morning, carpe_diem, carpe_diem, carpe_diem, mischief_maker, montauk_point, montauk_point, intrepid, satiate, royal_coupling, morning, morning, off_to_osaka]
 	current_scene = 2
 	playing = true
-	audio_stream_player.stream = music[current_scene]
-	audio_stream_player.play()
+	#audio_stream_player.stream = music[current_scene]
+	#audio_stream_player.play()
 	SceneSwitcher.switch_scene(scenes[current_scene])
 
 func game_over() -> void:
