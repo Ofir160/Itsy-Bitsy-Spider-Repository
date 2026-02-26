@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://bspg2wbg1geho"]
 
-[ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/Creatures/Spider/Threads/frame_thread.tscn" id="1_x1k1j"]
-[ext_resource type="PackedScene" uid="uid://dn2b5bcbl5j78" path="res://Scenes/Creatures/Spider/spider.tscn" id="2_4ahh4"]
+[ext_resource type="PackedScene" uid="uid://do3ooc0q0aq8m" path="res://Scenes/Universal/Threads/frame_thread.tscn" id="1_x1k1j"]
+[ext_resource type="PackedScene" uid="uid://dn2b5bcbl5j78" path="res://Scenes/Universal/Spider/spider.tscn" id="2_4ahh4"]
 [ext_resource type="Texture2D" uid="uid://c0dtrxtevxlur" path="res://Assets/Sprites/Backgrounds/Bg3.png" id="3_dl55b"]
 [ext_resource type="PackedScene" uid="uid://qyetern4ydyv" path="res://Scenes/Creatures/Insects/insect_spawner.tscn" id="4_osqx1"]
 [ext_resource type="PackedScene" uid="uid://b4piodq1b1dmu" path="res://Scenes/UI/scoreboard.tscn" id="5_sy7oa"]

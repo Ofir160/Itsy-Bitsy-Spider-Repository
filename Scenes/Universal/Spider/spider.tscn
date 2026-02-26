@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://dn2b5bcbl5j78"]
 
-[ext_resource type="Script" uid="uid://bn0nv11c3qe4j" path="res://Scripts/Creatures/Spider/spider.gd" id="1_h33fn"]
+[ext_resource type="Script" uid="uid://bn0nv11c3qe4j" path="res://Scripts/Universal/Spider/spider.gd" id="1_h33fn"]
 [ext_resource type="Texture2D" uid="uid://otke71ll5lvw" path="res://Assets/Sprites/Creatures/Spider_walking.png" id="2_gedd4"]
 [ext_resource type="Texture2D" uid="uid://db4wsawqidgfa" path="res://Assets/Sprites/Creatures/Untitled_Artwork 5.png" id="2_sbdki"]
 

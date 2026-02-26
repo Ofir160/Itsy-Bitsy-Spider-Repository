@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://do3ooc0q0aq8m"]
+
+[ext_resource type="Script" uid="uid://w5ryjq2fxecd" path="res://Scripts/Universal/Threads/frame_thread.gd" id="1_i1c6a"]
+
+[node name="frame" type="Line2D"]
+points = PackedVector2Array(0, 0, 0, 0)
+width = 2.5
+script = ExtResource("1_i1c6a")
