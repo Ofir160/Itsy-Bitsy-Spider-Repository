@@ -56,7 +56,7 @@ var spool_thread : Line2D
 var spooling : bool
 var create_spool : bool
 var spool_start_frame_thread : FrameThread
-var spool_created_complete : bool
+var spool_start_on_incomplete_connection : bool
 var silk_left : bool = true
 
 var intersection_found : bool
@@ -245,6 +245,7 @@ func turn_to_mouse() -> void:
 	
 	if on_intersection:
 		if intersection == origin_intersection:
+			
 			var frame_index = frames.find(current_frame_thread)
 			var left_index = modulo_frame_index(frame_index - 1)
 			var right_index = modulo_frame_index(frame_index + 1)
@@ -261,6 +262,8 @@ func turn_to_mouse() -> void:
 			elif distance_to_frame_right < distance_to_current and distance_to_frame_right < distance_to_frame_left:
 				rotation = frames[right_index].rotation
 				current_frame_thread = frames[right_index]
+		else:
+			var distance_to_current = distance_to_frame(global_mouse_pos, current_frame_thread)
 			
 	else:
 		if local_mouse_pos.x < -20:
@@ -289,10 +292,19 @@ func check_on_intersection() -> void:
 	on_intersection = results[1]
 	intersection = results[0]
 
+## Returns the frame index
 func modulo_frame_index(index : int) -> int:
 	if index < 0:
 		index += len(frames)
 	return index % len(frames)
+	
+## Returns true if indexA is to the right of indexB
+func index_is_to_the_right(indexA : int, indexB : int) -> bool:
+	if indexA == 0 and indexB == len(frames) - 1:
+		return true
+	if indexB == 0 and indexA == len(frames) - 1:
+		return false
+	return indexA > indexB
 
 func start_spool() -> void:
 	'''
@@ -339,9 +351,11 @@ func start_spool() -> void:
 			if (position - intersection).length() < INTERSECTION_ERROR:
 				return
 		
+		spool_start_on_incomplete_connection = false
 		for intersection in current_frame_thread.incomplete_connections:
 			if (position - intersection).length() < INTERSECTION_ERROR:
 				position = intersection
+				spool_start_on_incomplete_connection = true
 				
 		create_new_spool()
 			
@@ -371,7 +385,7 @@ func _on_origin_snap_zone_body_exited(_body: Node2D) -> void:
 		modulo_frame_index(frame_index + len(frames) / 2)
 		current_frame_thread = frames[frame_index]
 
-## Loops over all connections on the current frame thread and returns the first one that is far enough away
+## Loops over all connections on the current frame thread and returns the first one that is close enough
 func loop_intersections() -> Array:
 	var _chosen_intersection : Vector2 
 	var _intersection_found : bool
@@ -414,6 +428,19 @@ func end_spool() -> void:
 	if (position - origin_intersection).length() < SPOOL_BORDER and not within_borders():
 		delete_spool()
 		return
+		
+	# Can't end the spool too close to a complete intersection
+	for intersection in current_frame_thread.complete_connections:
+		if (position - intersection).length() < INTERSECTION_ERROR:
+			delete_spool()
+			return
+			
+	# If the spool is ended close to an incomplete connection
+	var spool_end_on_incomplete_intersection = false
+	for intersection in current_frame_thread.incomplete_connections:
+		if (position - intersection).length() < INTERSECTION_ERROR:
+			position = intersection
+			spool_end_on_incomplete_intersection = true
 	
 	# Create the two nodes on either side of the spiral thread
 	var nodeA : Node2D = Node2D.new()
@@ -432,6 +459,32 @@ func end_spool() -> void:
 	
 	# Emit the Thread Created signal
 	ThreadCreated.emit(thread_instance)
+	
+	# If the start of the spool was created on an incomplete intersection that intersection must now become complete
+	if spool_start_on_incomplete_connection:
+		erase_nearby(spool_start_frame_thread.incomplete_connections, spool_start)
+		spool_start_frame_thread.complete_connections.append(spool_start)
+	# Otherwise the spool has created an incomplete intersection
+	else:
+		spool_start_frame_thread.incomplete_connections.append(spool_start)
+	
+	# If the end of the spool was created on an incomplete intersection that intersection must now become complete
+	if spool_end_on_incomplete_intersection:
+		erase_nearby(current_frame_thread.incomplete_connections, position)
+		current_frame_thread.complete_connections.append(position)
+	# Otherwise the spool has created an incomplete intersection
+	else:
+		current_frame_thread.incomplete_connections.append(position)
+		
+	# If the current frame thread is to the right of the spool start frame thread
+	if index_is_to_the_right(end_index, starting_index):
+		print("Ended the spool to the right of where the spool was started")
+		spool_start_frame_thread.threads_right[spool_start] = thread_instance
+		current_frame_thread.threads_left[position] = thread_instance
+	else:
+		print("Ended the spool to the left of where the spool was started")
+		spool_start_frame_thread.threads_left[spool_start] = thread_instance
+		current_frame_thread.threads_right[position] = thread_instance
 	
 	# Delete the blue line connecting the player to the intersection point
 	delete_spool()
@@ -571,8 +624,12 @@ func end_spool()-> void:
 		print("thread doesnt exist")
 	# set endpoint of line
 '''
+
 func within_borders():
-	return position.x > (- camera_dimensions[0]/2) and position.x < (camera_dimensions[0]/2) and position.y > (-camera_dimensions[1]/2) and position.y < ( camera_dimensions[1]/2)
+	return (position.x > (- camera_dimensions[0]/2) 
+			and position.x < (camera_dimensions[0]/2) 
+			and position.y > (-camera_dimensions[1]/2) 
+			and position.y < ( camera_dimensions[1]/2))
 
 func left_right_overlap_check(s_i, e_i) -> bool:
 	var _starting_index = s_i
@@ -625,10 +682,11 @@ func left_right_overlap_check(s_i, e_i) -> bool:
 		else:
 			result = true
 	return result
-			
-func erase_nearby(intersections : Array[Vector2], position : Vector2) -> void:
+
+## Loops over the array and searches for an intersection close enough. If there is it will delete it
+func erase_nearby(intersections : Array[Vector2], pos : Vector2) -> void:
 	for intersection in intersections:
-		if (intersection - position).length() < INTERSECTION_ERROR:
+		if (intersection - pos).length() < INTERSECTION_ERROR:
 			intersections.erase(intersection)
 
 func find_angle_from_two_positions(pointA : Vector2, pointB : Vector2) -> float:

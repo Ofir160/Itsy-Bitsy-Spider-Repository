@@ -23,7 +23,7 @@ var cutscene_10 = "res://Scenes/Cutscenes/cutscene_10.tscn"
 var scenes
 var music
 
-var game_over_scene = "res://Scenes/Cutscenes/game_over.tscn"
+var game_over_scene = "res://Scenes/Levels/game_over.tscn"
 var level_selector = "res://Scenes/Cutscenes/level_select.tscn"
 var level_complete = "res://Scenes/Cutscenes/level_complete.tscn"
 
