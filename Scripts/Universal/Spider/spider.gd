@@ -19,6 +19,8 @@ var spiral_threads : Array[SpiralThread]
 const SPEED = 200.0
 const DEGREE_ERROR = 10 * PI / 180
 const INTERSECTION_ERROR = 20.0
+const MOUSE_ERROR = 10.0
+
 const ORIGIN_TURN_TIME = 0.2
 const FULL_TURN_TIME = 0.5
 const SPOOL_ON_intersection = 0.15
@@ -39,8 +41,10 @@ var lerping_spool_released : bool
 var turning_on_thread : bool
 var on_spiral_thread : bool
 var turn_to_thread : SpiralThread
+
 var approaching_frame_thread : FrameThread
 var previous_frame_thread : FrameThread
+
 var spiral_thread_end : Vector2
 
 var moving_right : bool
@@ -69,6 +73,8 @@ var intersection : Vector2
 var on_intersection : bool
 var complete_intersection : bool
 
+var intersection_snap_tracker : int
+
 func _ready() -> void:
 	current_frame_thread = initial_frame
 	origin_area.body_exited.connect(exited_origin)
@@ -78,7 +84,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	turn_to_mouse()
-	if Input.is_action_pressed("MoveForward"):
+	if Input.is_action_pressed("MoveForward") and (position - get_global_mouse_position()).length() > MOUSE_ERROR:
 		move(delta)
 	else:
 		animated_sprite.play("Idle")
@@ -93,7 +99,18 @@ func _physics_process(delta: float) -> void:
 		spool_thread.points[1].y = position.y
 
 func move(delta : float) -> void:
-	if on_spiral_thread:
+	if current_spiral_thread:
+		
+		# Sets audio and visuals
+		animated_sprite.play("Move")
+		audio_stream_player.stream = SPIDER_WALK
+		audio_stream_player.play()
+		
+		# If we are on a spiral thread
+		var orientation : Vector2 = Vector2(cos(-rotation), sin(rotation))
+		position += orientation * SPEED * delta
+		
+		check_on_intersection(approaching_frame_thread)
 		'''
 		# Sets visuals and audio
 		audio_stream_player.stream = SPIDER_WALK
@@ -198,7 +215,6 @@ func move(delta : float) -> void:
 				
 			pass
 		'''
-		pass
 	else:
 		
 		# Sets audio and visuals
@@ -206,12 +222,11 @@ func move(delta : float) -> void:
 		audio_stream_player.stream = SPIDER_WALK
 		audio_stream_player.play()
 		
-		# If we are on a frame
-		current_spiral_thread = null
+		# If we are on a frame thread
 		var orientation : Vector2 = Vector2(cos(-rotation), sin(rotation))
 		position += orientation * SPEED * delta
 		
-		check_on_intersection()
+		check_on_intersection(current_frame_thread)
 
 func turn_to_mouse() -> void:
 	var local_mouse_pos = get_local_mouse_position()
@@ -239,6 +254,10 @@ func turn_to_mouse() -> void:
 				rotation = frames[right_index].rotation
 				current_frame_thread = frames[right_index]
 		else:
+			# Sneaky trick
+			if approaching_frame_thread:
+				current_frame_thread = approaching_frame_thread
+			
 			var distance_to_current = distance_to_frame(global_mouse_pos, current_frame_thread)
 			if complete_intersection:
 				var spiral_left = current_frame_thread.threads_left[intersection]
@@ -247,20 +266,23 @@ func turn_to_mouse() -> void:
 				var distance_to_spiral_left = distance_to_spiral(global_mouse_pos, spiral_left)
 				var distance_to_spiral_right = distance_to_spiral(global_mouse_pos, spiral_right)
 				
-				if distance_to_spiral_left < distance_to_current and distance_to_spiral_left < distance_to_spiral_right:
-					position = intersection
-					
+				if distance_to_spiral_left < distance_to_current and distance_to_spiral_left < distance_to_spiral_right:		
 					turn_to_spiral(spiral_left)
-					
+					intersection_snap(intersection, -1)
 					current_spiral_thread = spiral_left
+					previous_frame_thread = current_frame_thread
+					approaching_frame_thread = get_frame_to_left(current_frame_thread)
 				elif distance_to_spiral_right < distance_to_current and distance_to_spiral_right < distance_to_spiral_left:
-					position = intersection
-					
 					turn_to_spiral(spiral_right)
-						
+					intersection_snap(intersection, 1)
 					current_spiral_thread = spiral_right
+					previous_frame_thread = current_frame_thread
+					approaching_frame_thread = get_frame_to_right(current_frame_thread)
 				else:
 					turn_to_current_frame()
+					intersection_snap(intersection, 0)
+					previous_frame_thread = null
+					approaching_frame_thread = null
 			else:
 				if current_frame_thread.threads_left.has(intersection):
 					var spiral_left = current_frame_thread.threads_left[intersection]
@@ -268,10 +290,16 @@ func turn_to_mouse() -> void:
 					
 					if distance_to_spiral_left < distance_to_current:
 						turn_to_spiral(spiral_left)
+						intersection_snap(intersection, -1)
 						current_spiral_thread = spiral_left
+						previous_frame_thread = current_frame_thread
+						approaching_frame_thread = get_frame_to_left(current_frame_thread)
 					else:
 						turn_to_current_frame()
-						if local_mouse_pos.x < 0:
+						intersection_snap(intersection, 0)
+						previous_frame_thread = null
+						approaching_frame_thread = null
+						if local_mouse_pos.x < -50:
 							# Need to turn around
 							rotation = rotation - PI
 						
@@ -281,22 +309,34 @@ func turn_to_mouse() -> void:
 					
 					if distance_to_spiral_right < distance_to_current:
 						turn_to_spiral(spiral_right)
+						intersection_snap(intersection, 1)
 						current_spiral_thread = spiral_right
+						previous_frame_thread = current_frame_thread
+						approaching_frame_thread = get_frame_to_right(current_frame_thread)
 					else:
 						turn_to_current_frame()
-						if local_mouse_pos.x < 0:
+						intersection_snap(intersection, 0)
+						previous_frame_thread = null
+						approaching_frame_thread = null
+						if local_mouse_pos.x < -50:
 							# Need to turn around
 							rotation = rotation - PI
 			
 	else:
-		if local_mouse_pos.x < -20:
+		if local_mouse_pos.x < -50:
 			# Need to turn around
 			rotation = rotation - PI
 			
+			# If you turn around on a spiral thread the threads behind and in front must be swapped
+			if current_spiral_thread:
+				var temp = previous_frame_thread
+				previous_frame_thread = approaching_frame_thread
+				approaching_frame_thread = temp
+			
+## Calculates the distance from a point to a frame thread
 func distance_to_frame(point : Vector2, frame : FrameThread) -> float:
 	var magnitude = frame.points[1].length()
 	var frame_end_point = Vector2(magnitude * cos(2 * PI - frame.rotation), -magnitude * sin(2 * PI - frame.rotation))
-	#var frame_end_point = frame.points[1].global_position
 
 	# Projects the point on to the frame then maps it to a value between 0 and 1
 	# The first / magnitude normalizes the frame_end_point vector, the second maps the value to 0 to 1
@@ -310,6 +350,7 @@ func distance_to_frame(point : Vector2, frame : FrameThread) -> float:
 	else:
 		return (frame_end_point - point).length()
 		
+## Calculates the distance from a point to a spiral thread
 func distance_to_spiral(point : Vector2, spiral : SpiralThread) -> float:
 	var pointA = spiral.PointA.global_position
 	var pointB = spiral.PointB.global_position
@@ -329,14 +370,16 @@ func distance_to_spiral(point : Vector2, spiral : SpiralThread) -> float:
 	else:
 		return (spiral.PointB.position - point).length()
 
+## Turns the player to face the frame thread
 func turn_to_current_frame() -> void:
 	# Just some black magic to rotate to the frame thread but only once.
 	if current_spiral_thread:
 		rotation = current_frame_thread.rotation
-		if get_local_mouse_position().x < 0:
+		if get_local_mouse_position().x < -50:
 			rotation = rotation - PI
 		current_spiral_thread = null
 		
+## Turns the player to face the spiral thread
 func turn_to_spiral(spiral : SpiralThread) -> void:
 	var pointA = spiral.PointA.global_position
 	var pointB = spiral.PointB.global_position
@@ -347,9 +390,15 @@ func turn_to_spiral(spiral : SpiralThread) -> void:
 	else:
 		look_at(pointB)
 
+## Snaps to the intersection if the player changed directions
+func intersection_snap(intersection : Vector2, new_tracker : int) -> void:
+	if new_tracker != intersection_snap_tracker:
+		position = intersection
+		intersection_snap_tracker = new_tracker
 
-func check_on_intersection() -> void:
-	var results : Array = loop_intersections()
+## Updates intersection variables
+func check_on_intersection(frame : FrameThread) -> void:
+	var results : Array = loop_intersections(frame)
 	intersection = results[0]
 	on_intersection = results[1]
 	complete_intersection = results[2]
@@ -367,6 +416,18 @@ func index_is_to_the_right(indexA : int, indexB : int) -> bool:
 	if indexB == 0 and indexA == len(frames) - 1:
 		return false
 	return indexA > indexB
+	
+## Returns the frame thread to the left of the inputed frame thread
+func get_frame_to_left(frame : FrameThread) -> FrameThread:
+	var frame_index = frames.find(frame)
+	var new_index = modulo_frame_index(frame_index - 1)
+	return frames[new_index]
+	
+## Returns the frame thread to the right of the inputed frame thread
+func get_frame_to_right(frame : FrameThread) -> FrameThread:
+	var frame_index = frames.find(frame)
+	var new_index = modulo_frame_index(frame_index + 1)
+	return frames[new_index]
 
 func start_spool() -> void:
 	'''
@@ -414,7 +475,7 @@ func start_spool() -> void:
 				return
 		
 		spool_start_on_incomplete_connection = false
-		var result = loop_incomplete_intersections()
+		var result = loop_incomplete_intersections(current_frame_thread)
 		if result[1]:
 			position = result[0]
 			spool_start_on_incomplete_connection = true
@@ -449,9 +510,9 @@ func exited_origin(_body: Node2D) -> void:
 		
 ## Loops over all intersections on the current frame thread and returns the first one that is close enough. 
 ## Returns the intersection, whether and intersection was found and whether it is a complete or incomplete intersection
-func loop_intersections() -> Array:
-	var complete = loop_complete_intersections()
-	var incomplete = loop_incomplete_intersections()
+func loop_intersections(frame : FrameThread) -> Array:
+	var complete = loop_complete_intersections(frame)
+	var incomplete = loop_incomplete_intersections(frame)
 	if complete[1]:
 		return [complete[0], true, true]
 	elif incomplete[1]:
@@ -459,20 +520,20 @@ func loop_intersections() -> Array:
 	return [Vector2.ZERO, false, false]
 	
 ## Loops over all complete intersections on the current frame thread and returns the first one that is close enough
-func loop_complete_intersections() -> Array:
+func loop_complete_intersections(frame : FrameThread) -> Array:
 	var _chosen_intersection : Vector2 
 	var _intersection_found : bool
-	for intersection in current_frame_thread.complete_connections:
+	for intersection in frame.complete_connections:
 		if (intersection - position).length() < INTERSECTION_ERROR:
 			_chosen_intersection = intersection
 			_intersection_found = true
 	return [_chosen_intersection, _intersection_found]
 
 ## Loops over all incomplete intersections on the current frame thread and returns the first one that is close enough
-func loop_incomplete_intersections() -> Array:
+func loop_incomplete_intersections(frame : FrameThread) -> Array:
 	var _chosen_intersection : Vector2 
 	var _intersection_found : bool
-	for intersection in current_frame_thread.incomplete_connections:
+	for intersection in frame.incomplete_connections:
 		if (intersection - position).length() < INTERSECTION_ERROR:
 			_chosen_intersection = intersection
 			_intersection_found = true
@@ -513,7 +574,7 @@ func end_spool() -> void:
 		return
 		
 	# Can't end the spool too close to a complete intersection
-	var complete = loop_complete_intersections()
+	var complete = loop_complete_intersections(current_frame_thread)
 	if complete[1]:
 		delete_spool()
 		return
@@ -522,7 +583,7 @@ func end_spool() -> void:
 	
 	# If the spool is ended close to an incomplete connection
 	var spool_end_on_incomplete_intersection = false
-	var incomplete = loop_incomplete_intersections()
+	var incomplete = loop_incomplete_intersections(current_frame_thread)
 	if incomplete[1]:
 		position = incomplete[0]
 		spool_end_on_incomplete_intersection = true
@@ -573,11 +634,10 @@ func end_spool() -> void:
 		
 	# If the current frame thread is to the right of the spool start frame thread
 	if end_right_of_start:
-		print("Ended the spool to the right of where the spool was started")
 		spool_start_frame_thread.threads_right[spool_start] = thread_instance
 		current_frame_thread.threads_left[position] = thread_instance
+	# If the current frame thread is to the left of the spool start frame thread
 	else:
-		print("Ended the spool to the left of where the spool was started")
 		spool_start_frame_thread.threads_left[spool_start] = thread_instance
 		current_frame_thread.threads_right[position] = thread_instance
 	
@@ -847,15 +907,16 @@ func _on_insect_eaten(insect : Insect) -> void:
 func _on_insect_spawner_wasp_created(wasp: Wasp) -> void:
 	wasp.spider = self
 
+'''
 func turn() -> void:
-	var results = loop_intersections()
+	var results = loop_intersections(current_frame_thread)
 	chosen_intersection = results[0]
 	intersection_found = results[1]
 	if not current_spiral_thread:
 # --------------------------------------------------------If not near origin and turning
 
 		if not intersection_found: 
-			'''
+			
 		# ------------------------------------ 180 DEGREE TURN ON A FRAME
 		
 			if Input.get_axis("TurnLeft", "TurnRight") > 0:
@@ -874,7 +935,7 @@ func turn() -> void:
 			timer.wait_time = FULL_TURN_TIME
 			timer.start()
 			lerping = true
-			'''
+			
 			pass
 			
 			
@@ -1251,3 +1312,4 @@ func turn() -> void:
 					spiral_thread_end = current_spiral_thread.PointA.position
 					
 				timer.start()
+'''
