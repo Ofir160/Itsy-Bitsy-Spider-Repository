@@ -241,15 +241,45 @@ func turn_to_mouse() -> void:
 		else:
 			var distance_to_current = distance_to_frame(global_mouse_pos, current_frame_thread)
 			if complete_intersection:
-				var distance_to_spiral_left = distance_to_spiral(global_mouse_pos, current_frame_thread.threads_left[intersection])
-				var distance_to_spiral_right = distance_to_spiral(global_mouse_pos, current_frame_thread.threads_right[intersection])
+				var spiral_left = current_frame_thread.threads_left[intersection]
+				var spiral_right = current_frame_thread.threads_right[intersection]
 				
-				if distance_to_spiral_left < distance_to_current and distance_to_spiral_left < distance_to_spiral_right:
-					rotation = current_frame_thread.threads_left[intersection].rotation
+				var distance_to_spiral_left = distance_to_spiral(global_mouse_pos, spiral_left)
+				var distance_to_spiral_right = distance_to_spiral(global_mouse_pos, spiral_right)
+				
+				if distance_to_spiral_left < distance_to_current and distance_to_spiral_left < distance_to_spiral_right:			
+					position = intersection
+					
+					var pointA = spiral_left.PointA.global_position
+					var pointB = spiral_left.PointB.global_position
+					
+					# Look at the point furthest away
+					if (intersection - pointA).length() > (intersection - pointB).length():
+						look_at(pointA)
+					else:
+						look_at(pointB)
+					
 					current_spiral_thread = current_frame_thread.threads_left[intersection]
 				elif distance_to_spiral_right < distance_to_current and distance_to_spiral_right < distance_to_spiral_left:
-					rotation = current_frame_thread.threads_right[intersection].rotation
+					position = intersection
+					
+					var pointA = spiral_right.PointA.global_position
+					var pointB = spiral_right.PointB.global_position
+					
+					# Look at the point furthest away
+					if (intersection - pointA).length() > (intersection - pointB).length():
+						look_at(pointA)
+					else:
+						look_at(pointB)
+						
 					current_spiral_thread = current_frame_thread.threads_right[intersection]
+				else:
+					# Just some black magic to rotate to the frame thread but only once.
+					if current_spiral_thread:
+						rotation = current_frame_thread.rotation
+						if get_local_mouse_position().x < 0:
+							rotation = rotation - PI
+						current_spiral_thread = null
 			else:
 				pass
 			
@@ -261,7 +291,8 @@ func turn_to_mouse() -> void:
 func distance_to_frame(point : Vector2, frame : FrameThread) -> float:
 	var magnitude = frame.points[1].length()
 	var frame_end_point = Vector2(magnitude * cos(2 * PI - frame.rotation), -magnitude * sin(2 * PI - frame.rotation))
-	
+	#var frame_end_point = frame.points[1].global_position
+
 	# Projects the point on to the frame then maps it to a value between 0 and 1
 	# The first / magnitude normalizes the frame_end_point vector, the second maps the value to 0 to 1
 	var t = frame_end_point.dot(point) / magnitude / magnitude
@@ -275,7 +306,10 @@ func distance_to_frame(point : Vector2, frame : FrameThread) -> float:
 		return (frame_end_point - point).length()
 		
 func distance_to_spiral(point : Vector2, spiral : SpiralThread) -> float:
-	var ab = spiral.PointB.position - spiral.PointA.position
+	var pointA = spiral.PointA.global_position
+	var pointB = spiral.PointB.global_position
+	
+	var ab = pointB - pointA
 	var magnitude = ab.length()
 	
 	# Projects the point on to the frame then maps it to a value between 0 and 1
@@ -283,7 +317,7 @@ func distance_to_spiral(point : Vector2, spiral : SpiralThread) -> float:
 	var t = ab.dot(point - spiral.PointA.position) / magnitude / magnitude
 	
 	if t < 1 and t > 0:
-		var numerator = abs(ab.y * point.x - ab.x * point.y + spiral.PointB.position.x * spiral.PointA.position.y - spiral.PointA.position.x * spiral.PointB.position.y)
+		var numerator = abs(ab.y * point.x - ab.x * point.y + pointB.x * pointA.y - pointA.x * pointB.y)
 		return numerator / magnitude
 	elif t < 0:
 		return (spiral.PointA.position - point).length()
